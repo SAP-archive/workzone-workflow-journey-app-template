@@ -1,0 +1,46 @@
+<core:FragmentDefinition xmlns="sap.m" 
+	xmlns:form="sap.ui.layout.form" 
+	xmlns:l="sap.ui.layout" 
+	xmlns:core="sap.ui.core" 
+	xmlns:u="sap.ui.unified" 
+	xmlns:mvc="sap.ui.core.mvc">
+	<VBox id="Step2_substep2_updateHealthEnrollment"
+          class="substepMarginLeft substepActive"
+          visible="{= ${visible}}"
+          binding="{/context/journeyApp/healthReminder}">
+		<Panel expandable="true" expanded="{= ${status} !== 'completed'}" width="auto" backgroundDesign="Transparent">
+			<headerToolbar>
+				<OverflowToolbar height="2rem" style="Clear">
+					<Title text="{i18n>STEPS_BEFORELEAVE_STEPS_UPDATEHEALTHENROLMENT_TITLE}" />
+					<core:Icon src="sap-icon://complete" class="size1" visible="{= ${status} === 'completed'}"/>
+					<core:Icon src="sap-icon://accept" class="size1" visible="{= ${status} === 'inprocess'}"/>
+					<core:Icon src="sap-icon://user-edit" class="size1" visible="{= ${status} === 'open'}"/>
+					<core:Icon src="sap-icon://error" class="size1" visible="{= ${status} === 'error'}"/>
+				</OverflowToolbar>
+			</headerToolbar>
+
+			<VBox class="substep">
+                <Text class="sapUiSmallMarginBottom"
+                      text="We recommend to set a reminder. It is important that you enroll your health plan after your baby is born." />
+				<HBox>
+                    <ComboBox class="sapUiSmallMarginEnd"
+                              items="{duereminder}"
+                              editable="{= ${status} === 'open'}"
+                              value="{due}">
+						<core:ListItem text="{text}"/>
+					</ComboBox>
+					<Button visible="{= ${status} === 'open'}"
+                            enabled="{= ${due} !== null}"
+                            text="Remind me"
+                            press=".uiEventSetHealthReminder"/>
+
+				</HBox>
+                <Text class="sapUiTinyMarginTop successtext"
+                      visible="{= ${status} === 'completed'}"
+                      text="Reminder was set successfully" />
+
+			</VBox>
+
+		</Panel>
+	</VBox>
+</core:FragmentDefinition>

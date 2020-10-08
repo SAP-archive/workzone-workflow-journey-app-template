@@ -1,0 +1,5 @@
+mta_archives/
+resources/
+node_modules/
+package-lock.json
+dist/

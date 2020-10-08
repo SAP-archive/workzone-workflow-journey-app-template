@@ -1,0 +1,71 @@
+<core:FragmentDefinition xmlns="sap.m" 
+	xmlns:form="sap.ui.layout.form" 
+	xmlns:l="sap.ui.layout" 
+	xmlns:core="sap.ui.core" 
+	xmlns:u="sap.ui.unified" 
+	xmlns:mvc="sap.ui.core.mvc">
+	<VBox id="Step1_substep1_consultation"
+          class="substepMarginLeft substepActive"
+          visible="{= ${visible}}"
+          binding="{/context/journeyApp/consultation}">
+		<Panel expandable="true" expanded="{= ${status} !== 'completed'}" width="auto" backgroundDesign="Transparent">
+			<headerToolbar>
+				<OverflowToolbar height="2rem" style="Clear">
+					<Title text="{i18n>STEPS_APPLYFORLEAVE_STEPS_CONSULTATION_TITLE}" />
+					<core:Icon src="sap-icon://complete" class="size1" visible="{= ${status} === 'completed'}"/>
+					<core:Icon src="sap-icon://accept" class="size1" visible="{= ${status} === 'inprocess'}"/>
+					<core:Icon src="sap-icon://user-edit" class="size1" visible="{= ${status} === 'open'}"/>
+					<core:Icon src="sap-icon://error" class="size1" visible="{= ${status} === 'error'}"/>
+				</OverflowToolbar>
+			</headerToolbar>
+
+			<VBox class="substep">
+				<Label text="Your baby's due date"
+                       required="{= ${status} === 'open' || ${status} === 'error'}"/>
+				<DatePicker id="sections_dueDate_value"
+                            maxDate="{path:'dueDate', formatter:'.formatMaxDueDate'}"
+                            minDate="{path:'dueDate', formatter:'.formatMinDueDate'}"
+                            value="{path:'dueDate'}"
+                            valueFormat="yyyy-MM-dd'T'hh:mm:ss.SSS'Z'"
+                            change=".checkAndSetDueDate"
+                            width="300px"
+                            editable="{= ${status} === 'open' || ${status} === 'error'}"/>
+			</VBox>
+			<VBox class="substep">
+				<HBox>
+					<Label class="sapUiSmallMarginTop"
+                           text="Terms &amp; Conditions"
+                           required="{= ${status} === 'open' || ${status} === 'error'}" />
+					<Link href="test" text="Read now..." class="sapUiSmallMarginTop baseline"/>
+				</HBox>
+				<CheckBox selected="{termsAccepted}"
+                          text="I agree to the Terms and Conditions"
+                          editable="{= ${status} === 'open' || ${status} === 'error'}"/>
+            </VBox>
+
+            <Button visible="{= ${status} === 'open' || ${status} === 'error'}"
+                    type="{= (${dueDate} !== null &amp;&amp; ${termsAccepted}) ? 'Emphasized' : 'Default'}"
+                    enabled="{= ${dueDate} !== null &amp;&amp; ${termsAccepted} !== null}"
+                    class="sapUiSmallMarginTop substep"
+                    text="Sign Up Now"
+                    press=".uiEventSignUpNow"/>
+
+            <VBox class="substep"
+                  visible="{= ${status} !== 'open'}">
+				<Text visible="{= ${status} === 'inprocess'}" class="sapUiSmallMarginTop successtext" text="You are in the process of being signed up.  Please wait." />
+				<Text visible="{= ${status} === 'error'}" class="sapUiSmallMarginTop successtext" text="It was not possible to sign you up: {errorMsg}" />
+				<Text visible="{= ${status} === 'completed'}" class="sapUiSmallMarginTop successtext" text="You are signed up. Your HR department will contact you soon." />
+				<HBox visible="{= ${status} === 'completed'}" class="sapUiSmallMarginTop">
+					<Label text="Your HR Contact" required="false" width="120px"/>
+					<Link href="mailto:{processor/email}" text="{processor/name}" />
+				</HBox>
+				<HBox visible="{= ${status} === 'completed'}" >
+					<Label text="HR Ticket Number" required="false" width="120px"/>
+					<Link href="{processor/hrticketdeeplink}" text="{processor/hrticketnumber}" />
+				</HBox>
+			</VBox>
+		</Panel>
+
+	</VBox>
+
+</core:FragmentDefinition>

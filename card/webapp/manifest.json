@@ -1,0 +1,157 @@
+{
+	"_version": "1.12.0",
+	"sap.app": {
+		"id": "com.sap.wz.journey.Example",
+		"type": "card",
+		"i18n": "i18n/i18n.properties",
+		"title": "{{appTitle}}",
+		"subTitle": "{{subTitle}}",
+		"shortTitle": "{{description}}",
+		"info": "{{description}}",
+        "description": "{{description}}",
+        "tags": {
+            "keywords": [
+                "{{KEYWORD1}}",
+                "{{KEYWORD2}}"
+            ]
+        },
+		"applicationVersion": {
+			"version": "2.0.34"
+		},
+		"sourceTemplate": {
+			"id": "ui5template.basicSAPUI5ApplicationProject",
+			"version": "1.40.12"
+		}
+	},
+	"sap.ui": {
+		"technology": "UI5",
+		"icons": {
+			"icon": "sap-icon://activate",
+			"favIcon": "",
+			"phone": "",
+			"phone@2": "",
+			"tablet": "",
+			"tablet@2": ""
+		},
+		"deviceTypes": {
+			"desktop": true,
+			"tablet": true,
+			"phone": true
+		}
+	},
+	"sap.ui5": {
+		"flexEnabled": false,
+		"rootView": {
+			"viewName": "com.sap.wz.journey.Example.view.Main",
+			"type": "XML",
+			"async": true,
+			"id": "Main"
+		},
+		"dependencies": {
+			"minUI5Version": "1.65.6",
+			"libs": {
+				"sap.ui.layout": {},
+				"sap.ui.core": {},
+				"sap.m": {}
+			}
+		},
+		"contentDensities": {
+			"compact": true,
+			"cozy": true
+		},
+		"models": {
+			"i18n": {
+				"type": "sap.ui.model.resource.ResourceModel",
+				"settings": {
+					"bundleName": "com.sap.wz.journey.Example.i18n.i18n"
+				}
+			}
+		},
+		"resources": {
+			"css": [
+				{
+					"uri": "css/style.css"
+				}
+			]
+		}
+	},
+	"sap.card": {
+        "type": "Component",
+        "configuration": {
+            "destinations": {
+                "mySFDestination": {
+                    "name": "sfsfdemo"
+                },
+                "myJAMDestination": {
+                    "name": "JAM"
+                },
+                "myCMISDestination": {
+                    "name": "bpmworkflowruntime_attachments"
+                }
+            },
+            "parameters": {
+                "sfUserId": {
+                    "value": "sfadmin"
+                },
+                "sfCompanyId": {
+                    "value": "SFPART035023"
+                },
+                "approver": {
+                    "value": "P000026"
+                },
+                "documentProvider": {
+                    "value": "JAM"
+                },
+                "workflowDefinitionId": {
+                    "value": "journeyappworkflow2"
+                },
+                "userId": {
+                    "value": "{context>sap.workzone/currentUser/id/value}",
+                    "type": "string",
+                    "label": "User ID"
+                },
+                "userName": {
+                    "value": "{context>sap.workzone/currentUser/name/value}",
+                    "type": "string",
+                    "label": "User Name"
+                },
+                "userEmail": {
+                    "value": "{context>sap.workzone/currentUser/email/value}",
+                    "type": "string",
+                    "label": "User EMail"
+                },
+                "companyId": {
+                    "value": "{context>sap.workzone/currentCompany/id/value}",
+                    "type": "string",
+                    "label": "Company ID"
+                },
+                "companyName": {
+                    "value": "{context>sap.workzone/currentCompany/name/value}",
+                    "type": "string",
+                    "label": "Company Name"
+                },
+                "workspaceId": {
+                    "value": "{context>sap.workzone/currentWorkspace/id/value}",
+                    "type": "string",
+                    "label": "Workspace ID"
+                },
+                "workspaceName": {
+                    "value": "{context>sap.workzone/currentWorkspace/name/value}",
+                    "type": "string",
+                    "label": "Workspace Name"
+                }
+            }
+        },
+		"header": {
+			"title": "Apply for Parental Leave",
+			"subTitle": "Guided assistance for your parental leave from the start until you return (original workflow)",
+			"icon": {
+				"src": "./images/plcalendar.svg"
+			}
+		}
+	},
+	"sap.platform.hcp": {
+		"uri": "webapp",
+		"_version": "1.1.0"
+	}
+}

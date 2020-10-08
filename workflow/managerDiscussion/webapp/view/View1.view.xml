@@ -1,0 +1,40 @@
+<mvc:View controllerName="com.sap.wz.journey.managerDiscussion.controller.View1" xmlns:mvc="sap.ui.core.mvc" displayBlock="true" xmlns="sap.m">
+    <App id="app">
+        <pages>
+            <Page showHeader="false" showFooter="false" binding="{/journeyApp}">
+                <content>
+                    <ObjectHeader
+                        icon="sap-icon://employee-approvals"
+                        title="Discuss Leave Request">
+                        <statuses>
+                        </statuses>
+                    </ObjectHeader>
+                    <VBox class="sapUiSmallMargin">
+                        <FormattedText htmlText="A meeting request has been sent for &lt;strong&gt;{discussLeave/startTime}&lt;/strong&gt; on {discussLeave/date}"/>
+                        <FormattedText htmlText="The location is &lt;strong&gt;{discussLeave/location}&lt;/strong&gt; and duration {discussLeave/duration}" />
+                        <FormattedText htmlText="The subject of the discussion is &lt;strong&gt;{discussLeave/subject}&lt;/strong&gt;" />
+                        <Label class="sapUiLargeMarginTop"
+                               text="The user supplied this message"
+                               labelFor="userMessage" />
+                        <Text id="userMessage"
+                              text="{discussLeave/message}" />
+                        <Label class="sapUiLargeMarginTop"
+                               text="The user also uploaded a document." />
+                        <ObjectIdentifier title="{doc>/Name}"
+                                          text="Size: {doc>/Size}" />
+                        <Label text="Created by: {doc>/CreatedBy}" />
+                        <Label text="Created on: {doc>/CreatedAt}" />
+                        <Link text="Click here to download the document {uploadDocuments/docPath} ({uploadDocuments/docId})"
+                              target="_blank"
+                              href="{doc>/Link}" />
+                        <Label class="sapUiLargeMarginTop"
+                               text="Please provide any comments you may have"
+                               labelFor="commentsInput"/>
+                        <Input id="commentsInput"
+                               value="{discussLeave/comments}" />
+                    </VBox>
+                </content>
+            </Page>
+        </pages>
+    </App>
+</mvc:View>

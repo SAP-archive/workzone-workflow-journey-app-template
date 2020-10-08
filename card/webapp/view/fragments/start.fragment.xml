@@ -1,0 +1,18 @@
+<core:FragmentDefinition xmlns="sap.m"
+                         xmlns:form="sap.ui.layout.form"
+                         xmlns:l="sap.ui.layout"
+                         xmlns:core="sap.ui.core"
+                         xmlns:u="sap.ui.unified"
+                         xmlns:mvc="sap.ui.core.mvc">
+    <VBox visible="{= ${/instance} === null }"
+          class="sapUiResponsiveMargin">
+        <Text text="This application will guide you through the process of applying for Parental Leave" />
+        <Button id="startWorkflow"
+                class="sapUiSmallMarginTop"
+                type="Emphasized"
+                visible="true"
+                enabled="true"
+                press=".uiEventStartWorkflow"
+                text="Start the Workflow" />
+    </VBox>
+</core:FragmentDefinition>

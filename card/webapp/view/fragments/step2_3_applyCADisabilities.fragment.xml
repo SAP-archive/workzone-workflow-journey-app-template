@@ -1,0 +1,29 @@
+<core:FragmentDefinition xmlns="sap.m" 
+	xmlns:form="sap.ui.layout.form" 
+	xmlns:l="sap.ui.layout" 
+	xmlns:core="sap.ui.core" 
+	xmlns:u="sap.ui.unified" 
+	xmlns:mvc="sap.ui.core.mvc">
+	<VBox id="Step2_substep3_applyCADisabilities"
+          class="substepMarginLeft substepActive"
+          visible="{= ${visible}}"
+          binding="{/context/journeyApp/applyCADisabilities}">
+		<Panel expandable="true" expanded="true" width="auto" backgroundDesign="Transparent">
+			<headerToolbar>
+				<OverflowToolbar height="2rem" style="Clear">
+					<Title text="{i18n>STEPS_BEFORELEAVE_STEPS_APPLYCADISABILITIES_TITLE}" />
+					<core:Icon src="sap-icon://complete" class="completed" visible="{= ${status} === 'completed'}"/>
+					<core:Icon src="sap-icon://accept" class="inactive" visible="{= ${status} === 'inavtive'}"/>
+					<core:Icon src="sap-icon://user-edit" class="open" visible="{= ${status} !== 'completed'}"/>
+				</OverflowToolbar>
+			</headerToolbar>
+
+			<VBox class="substep">
+				<Text class="sapUiSmallMarginBottom" text="Consult with your HR department on this, if you have questions. Use link below for the official government details." />
+				<Link href="https://https://www.edd.ca.gov/disability/" text="https://www.edd.ca.gov/disability/" target="_blank"/>
+
+			</VBox>
+
+		</Panel>
+	</VBox>
+</core:FragmentDefinition>

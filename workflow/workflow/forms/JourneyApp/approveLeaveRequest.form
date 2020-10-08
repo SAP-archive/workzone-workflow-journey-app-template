@@ -1,0 +1,52 @@
+{
+    "id": "approveleaverequest",
+    "schemaVersion": "1.0.0",
+    "name": "approveLeaveRequest",
+    "revision": "1.0",
+    "type": "task",
+    "readOnly": false,
+    "content": [
+        {
+            "id": "start_date",
+            "type": "datetime",
+            "label": "Start Date",
+            "readOnly": true,
+            "value": "${context.journeyApp.leaveRequest.date.start}",
+            "constraints": {
+                "required": false
+            }
+        },
+        {
+            "id": "end_date",
+            "type": "datetime",
+            "label": "End Date",
+            "readOnly": true,
+            "value": "${context.journeyApp.leaveRequest.date.end}",
+            "constraints": {
+                "required": false
+            }
+        },
+        {
+            "id": "comments",
+            "type": "string",
+            "label": "Comments",
+            "readOnly": false,
+            "value": "${context.journeyApp.leaveRequest.comments}",
+            "constraints": {
+                "required": false
+            }
+        }
+    ],
+    "decisions": [
+        {
+            "id": "approve",
+            "text": "Approve",
+            "decisionType": "positive"
+        },
+        {
+            "id": "reject",
+            "text": "Reject",
+            "decisionType": "negative"
+        }
+    ]
+}

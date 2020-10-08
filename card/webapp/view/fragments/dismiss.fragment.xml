@@ -1,0 +1,54 @@
+<core:FragmentDefinition xmlns="sap.m"
+                         xmlns:form="sap.ui.layout.form"
+                         xmlns:l="sap.ui.layout"
+                         xmlns:core="sap.ui.core"
+                         xmlns:u="sap.ui.unified"
+                         xmlns:mvc="sap.ui.core.mvc">
+    <Panel id="Dismiss"
+           expandable="true"
+           expanded="true"
+           width="auto"
+           backgroundDesign="Transparent"
+           binding="{/context/journeyApp}"
+           headerText="Dismiss the workflow"
+           visible="{= ${/instance/status} === 'RUNNING' &amp;&amp; (${state} === 'waitForFinalDismiss' || ${state} === 'receivedFinalDismiss')}">
+        <VBox class="sapUiResponsiveMargin">
+            <Text visible="true"
+                  id="dismissTxt1"
+                  class="sapUiSmallMarginTop successtext"
+                  text="You have successfully completed the workflow." />
+            <Text visible="true"
+                  id="dismissTxt0"
+                  class="sapUiSmallMarginTop successtext"
+                  text="{= ${documents}.length === 0 ? 'No documents were uploaded.' : 'The following documents were uploaded.  Select those you would like to permamently delete after this workflow is completed.'}" />
+            <List visible="{= ${documents}.length === 0 ? false : true}"
+                  class="sapUiSmallMarginTop"
+                  id="documentsList"
+                  items="{documents}"
+                  mode="MultiSelect"
+                  includeItemInSelection="false">
+                <StandardListItem title="{name}">
+                    <customData>
+                        <core:CustomData key="contentId"
+                                         value="{id}" />
+                    </customData>
+                </StandardListItem>
+            </List>
+            <Text visible="true"
+                  id="dismissTxt2"
+                  class="sapUiSmallMarginTop successtext"
+                  text="You can now safely dismiss it." />
+            <Button id="completeBtn"
+                    type="Emphasized"
+                    class="sapUiSmallMarginTop"
+                    visible="{= ${state} === 'waitForFinalDismiss'}"
+                    enabled="{= ${state} === 'waitForFinalDismiss'}"
+                    text="Dismiss"
+                    press=".uiEventDismissWorkflow($controller.byId('documentsList'))" />
+            <Text visible="{= ${state} === 'receivedFinalDismiss'}"
+                  id="completeTxt"
+                  class="sapUiSmallMarginTop successtext"
+                  text="Completing and archiving this parental leave workflow ..." />
+        </VBox>
+    </Panel>
+</core:FragmentDefinition>

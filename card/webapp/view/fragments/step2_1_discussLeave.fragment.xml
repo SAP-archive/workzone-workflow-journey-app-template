@@ -1,0 +1,113 @@
+<core:FragmentDefinition xmlns="sap.m" 
+	xmlns:form="sap.ui.layout.form" 
+	xmlns:l="sap.ui.layout" 
+	xmlns:core="sap.ui.core" 
+	xmlns:u="sap.ui.unified" 
+	xmlns:mvc="sap.ui.core.mvc">
+	<VBox id="Step2_substep1_discussLeave"
+          class="substepMarginLeft substepActive"
+          visible="{= ${visible}}"
+          binding="{/context/journeyApp/discussLeave}">
+		<Panel expandable="true" expanded="{= ${status} !== 'completed'}" width="auto" backgroundDesign="Transparent">
+			<headerToolbar>
+				<OverflowToolbar height="2rem" style="Clear">
+					<Title text="{i18n>STEPS_BEFORELEAVE_STEPS_DISCUSSLEAVE_TITLE}" />
+					<core:Icon src="sap-icon://complete" class="size1" visible="{= ${status} === 'completed'}"/>
+					<core:Icon src="sap-icon://accept" class="size1" visible="{= ${status} === 'inprocess'}"/>
+					<core:Icon src="sap-icon://user-edit" class="size1" visible="{= ${status} === 'open'}"/>
+					<core:Icon src="sap-icon://error" class="size1" visible="{= ${status} === 'error'}"/>
+				</OverflowToolbar>
+			</headerToolbar>
+
+			<VBox class="substep">
+				<Text class="sapUiSmallMarginBottom" text="Setup a meeting with your manager to go over the details of your planned leave" />
+				<HBox class="sapUiSmallMarginBottom">
+					<VBox class="sapUiTinyMarginEnd">
+						<Label width="120px"
+                               class="sapUiTinyMarginBottom"
+                               text="Date"
+                               required="{= ${status} === 'open' || ${status} === 'error'}" />
+						<DatePicker width="160px"
+                                    value="{date}"
+                                    valueFormat="yyyy-MM-dd'T'hh:mm:ss.SSS'Z'"
+                                    editable="{= ${status} === 'open' || ${status} === 'error'}" />
+					</VBox>
+					<VBox class="sapUiTinyMarginEnd">
+						<Label width="100px"
+                               class="sapUiTinyMarginBottom"
+                               text="Start Time"
+                               required="{= ${status} === 'open' || ${status} === 'error'}" />
+						<ComboBox width="100px"
+                                  items="{hours}"
+                                  value="{startTime}"
+                                  editable="{= ${status} === 'open' || ${status} === 'error'}">
+							<core:ListItem key="{text}" text="{text}" />
+						</ComboBox>
+					</VBox>
+					<VBox class="sapUiTinyMarginEnd">
+						<Label width="70px"
+                               class="sapUiTinyMarginBottom"
+                               text="Duration"
+                               required="{= ${status} === 'open' || ${status} === 'error'}" />
+						<ComboBox width="70px"
+                                  items="{durations}"
+                                  value="{duration}"
+                                  editable="{= ${status} === 'open' || ${status} === 'error'}">
+							<core:ListItem key="{text}" text="{text}"/>
+						</ComboBox>
+                    </VBox>
+                </HBox>
+                <HBox class="sapUiSmallMarginBottom">
+					<VBox class="sapUiTinyMarginEnd">
+						<Label width="150px"
+                               class="sapUiTinyMarginBottom"
+                               text="Location"
+                               required="{= ${status} === 'open' || ${status} === 'error'}" />
+						<ComboBox items="{locations}"
+                                  value="{location}"
+                                  editable="{= ${status} === 'open' || ${status} === 'error'}">
+							<core:ListItem key="{text}" text="{text}"/>
+						</ComboBox>
+					</VBox>
+				</HBox>
+				<HBox class="sapUiSmallMarginBottom">
+					<VBox width="100%" class="sapUiSmallMarginEnd">
+						<Label width="120px"
+                               class="sapUiTinyMarginBottom"
+                               text="Subject"
+                               required="{= ${status} === 'open' || ${status} === 'error'}" />
+						<Input width="100%"
+                               value="{subject}"
+                               editable="{= ${status} === 'open' || ${status} === 'error'}" />
+					</VBox>
+				</HBox>
+				<HBox class="sapUiSmallMarginBottom">
+					<VBox width="100%" class="sapUiSmallMarginEnd">
+						<Label width="120px"
+                               class="sapUiTinyMarginBottom"
+                               text="Message"
+                               required="{= ${status} === 'open' || ${status} === 'error'}" />
+						<TextArea width="100%"
+                                  height="70px"
+                                  value="{message}"
+                                  editable="{= ${status} === 'open' || ${status} === 'error'}" />
+					</VBox>
+                </HBox>
+            </VBox>
+
+            <Button class="sapUiSmallMarginTop substep"
+                    visible="{= ${status} === 'open' || ${status} === 'error'}"
+                    type="{= (${message} !== null &amp;&amp; ${subject} !== null &amp;&amp; ${location} !== null &amp;&amp; ${date} !== null &amp;&amp; ${duration} !== null &amp;&amp; ${startTime} !== null) ? 'Emphasized': 'Default'}"
+                    enabled="{= ${message} !== null &amp;&amp; ${subject} !== null &amp;&amp; ${location} !== null &amp;&amp; ${date} !== null &amp;&amp; ${duration} !== null &amp;&amp; ${startTime} !== null}"
+                    text="Send Meeting Request"
+                    press=".uiEventSetupLeaveDiscussion"/>
+
+            <VBox class="substep sapUiSmallMarginBottom sapUiSmallMarginTop"
+                  visible="{= ${status} !== 'open'}">
+				<Text visible="{= ${status} === 'inprocess'}" class="successtext" text="A meeting request has been sent out." />
+				<Text visible="{= ${status} === 'completed'}" class="successtext" text="A meeting request has been arranged by {userTask/processor} (with status '{userTask/decision}') and comments {comments}." />
+				<Text visible="{= ${status} === 'error'}" class="successtext" text="The meeting request was rejected: {errorMsg}" />
+            </VBox>
+		</Panel>
+	</VBox>
+</core:FragmentDefinition>

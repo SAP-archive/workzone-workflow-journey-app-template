@@ -1,0 +1,29 @@
+<core:FragmentDefinition xmlns="sap.m" 
+	xmlns:form="sap.ui.layout.form" 
+	xmlns:l="sap.ui.layout" 
+	xmlns:core="sap.ui.core" 
+	xmlns:u="sap.ui.unified" 
+	xmlns:mvc="sap.ui.core.mvc">
+	<VBox id="Step3_substep1_stayCurrent"
+          class="substepMarginLeft substepActive"
+          visible="{= ${visible}}"
+          binding="{/context/journeyApp/stayCurrent}">
+		<Panel expandable="true" expanded="{= ${status} !== 'completed'}" width="auto" backgroundDesign="Transparent">
+			<headerToolbar>
+				<OverflowToolbar height="2rem" style="Clear">
+					<Title text="{i18n>STEPS_DURINGLEAVE_STEPS_STAYCURRENT_TITLE}" />
+					<core:Icon src="sap-icon://complete" class="size1" visible="{= ${status} === 'completed'}"/>
+					<core:Icon src="sap-icon://accept" class="size1" visible="{= ${status} === 'inprocess'}"/>
+					<core:Icon src="sap-icon://user-edit" class="size1" visible="{= ${status} === 'open'}"/>
+					<core:Icon src="sap-icon://error" class="size1" visible="{= ${status} === 'error'}"/>
+				</OverflowToolbar>
+			</headerToolbar>
+
+			<VBox class="substep">
+				<Text class="sapUiSmallMarginBottom" text="We have provided you many resources to stay current on the industry and connected to your colleagues." />
+				<Link href="https://workzonebetatest.workzone.cfapps.eu10.hana.ondemand.com/site#workzone-home&amp;/groups/MjU5v2EZJB6T0DrfVgzB5y/overview_page/u6bctAlhBxabEqPlQxsVMA" text="Find it here" target="_blank"/>
+			</VBox>
+
+		</Panel>
+	</VBox>
+</core:FragmentDefinition>

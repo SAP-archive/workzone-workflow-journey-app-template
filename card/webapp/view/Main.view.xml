@@ -1,0 +1,77 @@
+<mvc:View xmlns="sap.m"
+          xmlns:form="sap.ui.layout.form"
+          xmlns:l="sap.ui.layout"
+          xmlns:core="sap.ui.core"
+          xmlns:u="sap.ui.unified"
+          xmlns:mvc="sap.ui.core.mvc"
+          controllerName="com.sap.wz.journey.Example.controller.Main"
+          xmlns:html="http://www.w3.org/1999/xhtml">
+
+    <core:Fragment type="XML" fragmentName="com.sap.wz.journey.Example.view.fragments.start" />
+
+	<Wizard id="JourneyAppWizard"
+            visible="{= ${/instance} !== null &amp;&amp; ${/instance/status} === 'RUNNING'}"
+            complete="wizardCompletedHandler"
+            class="plwizard"
+            height="auto"
+            finishButtonText="Complete"
+            binding="{/context/journeyApp}">
+
+		<WizardStep id="Step1_Applyforleave"
+                    title="{i18n>STEP1_APPLYFORLEAVE_TITLE}"
+                    validated="{= ${stepValidated} >= 1}"
+                    complete=".uiEventWizardStep1Complete">
+			<Title text="Apply for leave" titleStyle="H3" class="sapUiSmallMarginBottom shiftHeader plheader" />
+
+			<core:Fragment type="XML" fragmentName="com.sap.wz.journey.Example.view.fragments.step1_1_consultation" />
+			<core:Fragment type="XML" fragmentName="com.sap.wz.journey.Example.view.fragments.step1_2_uploadDocuments" />
+			<core:Fragment type="XML" fragmentName="com.sap.wz.journey.Example.view.fragments.step1_3_createLeaveRequest" />
+			<VBox class="sapUiSmallMarginBottom"></VBox>
+		</WizardStep>
+
+		<WizardStep id="Step2_BeforeYouLeave"
+                    title="{i18n>STEP2_BEFOREYOULEAVE_TITLE}"
+                    validated="{= ${stepValidated} >= 2}"
+                    complete=".uiEventWizardStep2Complete">
+			<Title text="Before you Leave" titleStyle="H3" class="sapUiSmallMarginBottom plheader" />
+
+			<core:Fragment type="XML" fragmentName="com.sap.wz.journey.Example.view.fragments.step2_1_discussLeave" />
+			<core:Fragment type="XML" fragmentName="com.sap.wz.journey.Example.view.fragments.step2_2_updateHealthEnrollment" />
+			<!--
+            <core:Fragment type="XML" fragmentName="com.sap.wz.journey.Example.view.fragments.step2_3_applyCADisabilities" />
+			<core:Fragment type="XML" fragmentName="com.sap.wz.journey.Example.view.fragments.step2_4_delegateApprovals" />
+            -->
+			<VBox class="sapUiSmallMarginBottom"></VBox>
+		</WizardStep>
+
+		<WizardStep id="Step3_DuringLeave"
+                    title="{i18n>STEP3_DURINGLEAVE_TITLE}"
+                    validated="{= ${stepValidated} >= 3}"
+                    complete=".uiEventWizardStep3Complete">
+			<Title text="During Leave" titleStyle="H3" class="sapUiSmallMarginBottom plheader" />
+
+			<core:Fragment type="XML" fragmentName="com.sap.wz.journey.Example.view.fragments.step3_1_stayCurrent" />
+			<core:Fragment type="XML" fragmentName="com.sap.wz.journey.Example.view.fragments.step3_2_notifyChanges" />
+			<VBox class="sapUiSmallMarginBottom"></VBox>
+		</WizardStep>
+
+		<WizardStep id="Step4_BackToWork"
+                    title="{i18n>STEP4_BACKTOWORK_TITLE}"
+                    validated="{= ${stepValidated} >= 4}"
+                    class="sapUiSmallMarginBottom"
+                    complete=".uiEventWizardStep4Complete">
+			<Title text="Back To Work" titleStyle="H3" class="sapUiSmallMarginBottom plheader" />
+
+			<core:Fragment type="XML" fragmentName="com.sap.wz.journey.Example.view.fragments.step4_1_update401" />
+			<core:Fragment type="XML" fragmentName="com.sap.wz.journey.Example.view.fragments.step4_2_updateLife" />
+			<core:Fragment type="XML" fragmentName="com.sap.wz.journey.Example.view.fragments.step4_3_signupDayCare" />
+			<core:Fragment type="XML" fragmentName="com.sap.wz.journey.Example.view.fragments.step4_4_feedback" />
+			<VBox class="sapUiSmallMarginBottom"></VBox>
+		</WizardStep>
+	</Wizard>
+    
+    <core:Fragment type="XML" fragmentName="com.sap.wz.journey.Example.view.fragments.dismiss"/>
+    <core:Fragment type="XML" fragmentName="com.sap.wz.journey.Example.view.fragments.inError"/>
+    <core:Fragment type="XML" fragmentName="com.sap.wz.journey.Example.view.fragments.isSuspended"/>
+
+</mvc:View>

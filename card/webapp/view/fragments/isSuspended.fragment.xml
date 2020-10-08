@@ -1,0 +1,15 @@
+<core:FragmentDefinition xmlns="sap.m" 
+                         xmlns:form="sap.ui.layout.form" 
+                         xmlns:l="sap.ui.layout" 
+                         xmlns:core="sap.ui.core" 
+                         xmlns:u="sap.ui.unified" 
+                         xmlns:mvc="sap.ui.core.mvc">
+    <VBox id="IsSuspended"
+          class="sapUiSmallMarginBottom"
+          visible="{= ${status} === 'SUSPENDED'}"
+          binding="{/instance}">
+        <Text class="sapUiSmallMarginTop successtext"
+              visible="true"
+              text="We're sorry but currently your Parental Leave request is Suspended"/>
+    </VBox>
+</core:FragmentDefinition>

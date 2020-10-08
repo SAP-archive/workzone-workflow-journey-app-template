@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Parental Leave</title>
+    <script
+      id="sap-ui-bootstrap"
+      src="https://sapui5.hana.ondemand.com/1.77.2/resources/sap-ui-integration.js"
+      data-sap-ui-theme="sap_fiori_3"
+      data-sap-ui-versionedLibCss="true"
+    ></script>
+    <script>
+      window.env = {
+        // Set the remote workflow URL or local host for mock
+        // WORKFLOW_URL: "http://localhost:8010/",
+        WORKFLOW_URL:
+          "https://workzonebetatest.workzone.cfapps.eu10.hana.ondemand.com/comsapbpmworkflow.comsapbpmwusformplayer/bpmworkflowruntime/",
+
+        // Enable to mock the workflow context
+        WORKFLOW_MOCK: false,
+
+        WORKFLOW_USER: "chris.jobson@sap.com",
+        WORKFLOW_FIRSTNAME: "Chris",
+        WORKFLOW_LASTNAME: "Jobson",
+      };
+    </script>
+    <!-- script id="sap-ui-bootstrap" src="https://sapui5.hana.ondemand.com/1.77.2/resources/sap-ui-integration.js"
+		data-sap-ui-theme="AAA"
+		data-sap-ui-versionedLibCss="true"
+		data-sap-ui-theme-roots='{"AAA":"https://swzdevintegration.lkg.workzone.cfapps.sap.hana.ondemand.com/comsapuitheming.runtime/themeroot/v1/UI5"}'
+	</script -->
+  </head>
+
+  <body class="sapUiBody sapUiSizeCompact">
+    <ui-integration-card
+      manifest="./manifest.json"
+      style="margin: 100px; width: 900px; height: 600px;"
+    >
+    </ui-integration-card>
+
+    <pre
+      id="wfcontext"
+      style="
+        display: block;
+        position: absolute;
+        right: 0;
+        top: 0;
+        width: 600px;
+        overflow: auto;
+        height: 600px;
+      "
+    ></pre>
+  </body>
+</html>

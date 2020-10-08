@@ -1,0 +1,92 @@
+{
+    "id": "confirmmeetingrequest",
+    "schemaVersion": "1.0.0",
+    "name": "confirmMeetingRequest",
+    "revision": "1.0",
+    "type": "task",
+    "readOnly": false,
+    "content": [
+        {
+            "id": "date",
+            "type": "datetime",
+            "label": "Date",
+            "readOnly": true,
+            "value": "${context.journeyApp.discussLeave.date}",
+            "constraints": {
+                "required": false
+            }
+        },
+        {
+            "id": "time",
+            "type": "time",
+            "label": "Time",
+            "readOnly": true,
+            "value": "${context.journeyApp.discussLeave.startTime}",
+            "constraints": {
+                "required": false
+            }
+        },
+        {
+            "id": "duration",
+            "type": "string",
+            "label": "Duration",
+            "readOnly": true,
+            "value": "${context.journeyApp.discussLeave.duration}",
+            "constraints": {
+                "required": false
+            }
+        },
+        {
+            "id": "location",
+            "type": "string",
+            "label": "Location",
+            "readOnly": true,
+            "value": "${context.journeyApp.discussLeave.location}",
+            "constraints": {
+                "required": false
+            }
+        },
+        {
+            "id": "subject",
+            "type": "string",
+            "label": "Subject",
+            "readOnly": true,
+            "value": "${context.journeyApp.discussLeave.subject}",
+            "constraints": {
+                "required": false
+            }
+        },
+        {
+            "id": "message",
+            "type": "string",
+            "label": "Message",
+            "readOnly": true,
+            "value": "${context.journeyApp.discussLeave.message}",
+            "constraints": {
+                "required": false
+            }
+        },
+        {
+            "id": "comments",
+            "type": "string",
+            "label": "Comments",
+            "readOnly": false,
+            "value": "${context.journeyApp.discussLeave.comments}",
+            "constraints": {
+                "required": false
+            }
+        }
+    ],
+    "decisions": [
+        {
+            "id": "accept",
+            "text": "Accept",
+            "decisionType": "positive"
+        },
+        {
+            "id": "reject",
+            "text": "Reject",
+            "decisionType": "negative"
+        }
+    ]
+}

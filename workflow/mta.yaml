@@ -1,0 +1,90 @@
+ID: JourneyAppWorkflowDocuments
+_schema-version: "3.2"
+version: 0.0.1
+modules:
+- name: workflowdocuments
+  type: com.sap.application.content
+  path: workflow
+  requires:
+  - name: workflow_demo
+    parameters:
+      content-target: true
+- name: ui_deployer
+  type: com.sap.application.content
+  path: .
+  requires:
+  - name: journeyWorkflowDocuments_html_repo_host
+    parameters:
+      content-target: true
+  build-parameters:
+    build-result: resources
+    requires:
+    - artifacts:
+      - managerDiscussion-content.zip
+      name: managerDiscussion
+      target-path: resources/
+- name: managerDiscussion
+  type: html5
+  path: managerDiscussion
+  build-parameters:
+    builder: custom
+    commands:
+    - npm run build
+    supported-platforms: []
+- name: destination_content
+  type: com.sap.application.content
+  requires:
+  - name: uaa_managerDiscussion
+    parameters:
+      service-key:
+        name: uaa_managerDiscussion-key
+  - name: journeyWorkflowDocuments_html_repo_host
+    parameters:
+      service-key:
+        name: journeyWorkflowDocuments_html_repo_host-key
+  - name: destination_managerDiscussion
+    parameters:
+      content-target: true
+  parameters:
+    content:
+      subaccount:
+        destinations:
+        - Name: managerDiscussion_html_repo_host
+          ServiceInstanceName: journeyWorkflowDocuments_html_repo_host
+          ServiceKeyName: journeyWorkflowDocuments_html_repo_host-key
+          sap.cloud.service: managerDiscussion
+        - Name: managerDiscussion_uaa
+          ServiceInstanceName: uaa_managerDiscussion
+          ServiceKeyName: uaa_managerDiscussion-key
+          sap.cloud.service: managerDiscussion
+          Authentication: OAuth2UserTokenExchange
+        existing_destinations_policy: update
+  build-parameters:
+    no-source: true
+resources:
+  - name: workflow_demo
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: workflow
+      service-plan: standard
+  - name: journeyWorkflowDocuments_html_repo_host
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: html5-apps-repo
+      service-plan: app-host
+  - name: destination_managerDiscussion
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: destination
+      service-plan: lite
+  - name: uaa_managerDiscussion
+    type: org.cloudfoundry.managed-service
+    parameters:
+      path: ./xs-security.json
+      service: xsuaa
+      service-plan: application
+build-parameters:
+  before-all:
+  - builder: custom
+    commands:
+    - npm install

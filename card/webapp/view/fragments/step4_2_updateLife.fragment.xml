@@ -1,0 +1,27 @@
+<core:FragmentDefinition xmlns="sap.m" 
+	xmlns:form="sap.ui.layout.form" 
+	xmlns:l="sap.ui.layout" 
+	xmlns:core="sap.ui.core" 
+	xmlns:u="sap.ui.unified" 
+	xmlns:mvc="sap.ui.core.mvc">
+	<VBox id="Step4_substep2_updateLife"
+          class="substepMarginLeft substepActive"
+          visible="{= ${visible}}"
+          binding="{/context/journeyApp/updateLife}">
+		<Panel expandable="true" expanded="{= ${status} !== 'completed'}" width="auto" backgroundDesign="Transparent">
+			<headerToolbar>
+				<OverflowToolbar height="2rem" style="Clear">
+					<Title text="{i18n>STEPS_BACKTOWORK_STEPS_UPDATELIFE_TITLE}" />
+					<core:Icon src="sap-icon://complete" class="size1" visible="{= ${status} === 'completed'}"/>
+					<core:Icon src="sap-icon://accept" class="size1" visible="{= ${status} === 'inprocess'}"/>
+					<core:Icon src="sap-icon://user-edit" class="size1" visible="{= ${status} === 'open'}"/>
+					<core:Icon src="sap-icon://error" class="size1" visible="{= ${status} === 'error'}"/>
+				</OverflowToolbar>
+			</headerToolbar>
+
+			<VBox class="substep">
+				<Link href="https://www.benefitfocus.com/solutions/health-plan" text="https://www.benefitfocus.com/solutions/health-plan" target="_blank"/>
+			</VBox>
+		</Panel>
+	</VBox>
+</core:FragmentDefinition>

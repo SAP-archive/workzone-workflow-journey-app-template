@@ -1,0 +1,33 @@
+<core:FragmentDefinition xmlns="sap.m" 
+                         xmlns:form="sap.ui.layout.form" 
+                         xmlns:l="sap.ui.layout" 
+                         xmlns:core="sap.ui.core" 
+                         xmlns:u="sap.ui.unified" 
+                         xmlns:mvc="sap.ui.core.mvc">
+    <Panel id="InError"
+           expandable="false"
+           expanded="true"
+           width="auto"
+           backgroundDesign="Transparent"
+           binding="{/instance}"
+           headerText="The Workflow is in Error"
+           visible="{= ${status} === 'ERRONEOUS'}">
+        <VBox class="sapUiSmallMarginBottom">
+            <Text class="sapUiSmallMarginTop successtext"
+                  visible="true"
+                  text="{lastErrorMessage}"/>
+            <Button id="TerminateWorkflow"
+                    type="Emphasized"
+                    class="sapUiSmallMarginTop"
+                    text="Terminate Workflow"
+                    press=".uiEventTerminateWorkflow"
+                    visible="true"/>
+            <Button id="RestartWorkflow"
+                    type="Emphasized"
+                    class="sapUiSmallMarginTop"
+                    text="Restart Workflow"
+                    press=".uiEventRestartWorkflow"
+                    visible="true"/>
+        </VBox>
+    </Panel>
+</core:FragmentDefinition>

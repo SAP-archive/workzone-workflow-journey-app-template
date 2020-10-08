@@ -1,0 +1,74 @@
+/* Enter your custom styles here */
+.plwizard .substepMarginLeft {
+	margin-left: 1.5rem;
+	max-width:600px;
+}
+.plwizard .substepMarginLeft .substep {
+	margin-left: 1.5rem;
+	max-width: 550px;
+
+}
+.plwizard .sapMWizardStepTitle {
+	display: block;
+	height: 0;
+	overflow: hidden;
+	margin-left: -2rem;
+	margin-bottom: 0px !important;
+	width:200%;
+}
+.plwizard .sapMWizardStepContainer {
+	padding-right: 0px !important;
+	padding-top: 0px !important;
+}
+.plwizard .sapMWizardStep {
+
+	margin-right: 0px;
+}
+.plwizard .substep .baseline {
+	margin-top: 0.5rem;
+	padding-left: 0.3rem;
+}
+
+.plwizard .substep .right {
+	margin-left: 100%;
+}
+.plwizard .sapMWizardProgressNavStep[data-sap-ui-wpn-step-current="true"] .sapMWizardProgressNavStepContainer::after {
+    height: .188rem;
+    background: var(--sapUiSelected, #0854a0);
+    content: "";
+    display: block;
+    position: relative;
+    width: 100%;
+    bottom: -0.91235rem;
+}
+
+.plwizard .substepicon {
+	font-size: 1.3rem;
+	vertical-align: baseline;
+	margin-top:1rem;
+	margin-right:0.5rem;
+	color:var(--sapField_SuccessColor, #107e3e) !important;
+}
+.plwizard .successtext {
+	color: var(--sapField_SuccessColor, #107e3e)!important;
+	font-weight: 600;
+}
+.plwizard .sapMPanelContent {
+	padding-bottom: 0.5rem;
+}
+.plwizard .open {
+	display: none;
+}
+.plwizard .inactive {
+	display: none;
+}
+.plwizard .completed {
+	display: none;
+}
+.plwizard .shiftHeader {
+	position: absolute;
+	margin-top: -10rem;
+}
+.plwizard .plheader {
+	margin-left: 1rem;
+}

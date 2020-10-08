@@ -1,0 +1,53 @@
+<core:FragmentDefinition xmlns="sap.m" 
+	xmlns:form="sap.ui.layout.form" 
+	xmlns:l="sap.ui.layout" 
+	xmlns:core="sap.ui.core" 
+	xmlns:u="sap.ui.unified" 
+	xmlns:mvc="sap.ui.core.mvc">
+	<VBox id="Step4_substep4_feedback"
+          class="substepMarginLeft substepActive"
+          visible="{= ${visible}}"
+          binding="{/context/journeyApp/feedback}">
+		<Panel expandable="true" expanded="{= ${status} !== 'completed'}" width="auto" backgroundDesign="Transparent">
+			<headerToolbar>
+				<OverflowToolbar height="2rem" style="Clear">
+					<Title text="{i18n>STEPS_BACKTOWORK_STEPS_FEEDBACK_TITLE}" />
+					<core:Icon src="sap-icon://complete" class="size1" visible="{= ${status} === 'completed'}"/>
+					<core:Icon src="sap-icon://accept" class="size1" visible="{= ${status} === 'inprocess'}"/>
+					<core:Icon src="sap-icon://user-edit" class="size1" visible="{= ${status} === 'open'}"/>
+					<core:Icon src="sap-icon://error" class="size1" visible="{= ${status} === 'error'}"/>
+				</OverflowToolbar>
+			</headerToolbar>
+
+			<VBox class="sapUiSmallMarginEnd substep">
+				<Label class="sapUiTinyMarginBottom"
+                       text="Any feedback to improve the parental leave process"
+                       required="{= ${status} === 'open' || ${status} === 'error'}" />
+				<RatingIndicator class="sapUiTinyMarginBottom"
+                                 maxValue="5"
+                                 value="{rating}"
+                                 iconSize="22px"
+                                 tooltip="Rating Tooltip"
+                                 editable="{= ${status} === 'open' || ${status} === 'error'}"/>
+				<TextArea width="100%"
+                          height="50px"
+                          value="{comment}"
+                          editable="{= ${status} === 'open' || ${status} === 'error'}"/>
+            </VBox>
+            
+            <Button class="sapUiSmallMarginTop substep"
+                    visible="{= ${status} === 'open' || ${status} === 'error'}"
+                    type="{= (${rating} !== null &amp;&amp; ${comment} !== null) ? 'Emphasized': 'Default'}"
+                    enabled="{= ${rating} !== null &amp;&amp; ${comment} !== null}"
+                    text="Send"
+                    press=".uiEventSendFeedback"/>
+
+            <VBox class="substep sapUiSmallMarginBottom sapUiSmallMarginTop"
+                  visible="{= ${status} !== 'open'}">
+				<Text visible="{= ${status} === 'inprocess'}" class="successtext" text="Your feedback has been submitted ... please wait" />
+				<Text visible="{= ${status} === 'completed'}" class="successtext" text="Thanks for the feedback" />
+				<Text visible="{= ${status} === 'error'}" class="successtext" text="The feedback was rejected: ${errortMsg}" />
+            </VBox>
+		</Panel>
+	</VBox>
+</core:FragmentDefinition>

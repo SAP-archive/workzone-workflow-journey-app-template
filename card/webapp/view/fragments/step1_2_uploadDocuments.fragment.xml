@@ -1,0 +1,60 @@
+<core:FragmentDefinition xmlns="sap.m" 
+	xmlns:form="sap.ui.layout.form" 
+	xmlns:l="sap.ui.layout" 
+	xmlns:core="sap.ui.core" 
+	xmlns:u="sap.ui.unified" 
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns:ext="com.sap.wz.journey.Example.ext">
+	<VBox id="Step1_substep2_uploadDocuments"
+          class="substepMarginLeft substepActive"
+          visible="{= ${visible}}"
+          binding="{/context/journeyApp/uploadDocuments}">
+		<Panel expandable="true" expanded="{= ${status} !== 'completed'}" width="auto" backgroundDesign="Transparent">
+			<headerToolbar>
+				<OverflowToolbar height="2rem" style="Clear">
+					<Title text="{i18n>STEPS_APPLYFORLEAVE_STEPS_UPLOADDOCUMENTS_TITLE}" />
+					<core:Icon src="sap-icon://complete" class="size1" visible="{= ${status} === 'completed'}"/>
+					<core:Icon src="sap-icon://accept" class="size1" visible="{= ${status} === 'inprocess'}"/>
+					<core:Icon src="sap-icon://user-edit" class="size1" visible="{= ${status} === 'open'}"/>
+					<core:Icon src="sap-icon://error" class="size1" visible="{= ${status} === 'error'}"/>
+				</OverflowToolbar>
+			</headerToolbar>
+
+			<VBox class="substep">
+				<Label class="sapUiTinyMarginBottom" text="Please collect all documents needed and upload them"/>
+					<VBox>
+						<Link href="test" text="Leave Certification Form" />
+						<Text class="sapUiTinyMarginBottom" wrapping="true" text="Please have this completed by your physician."/>
+						<ext:WFFileUploader enabled="{= ${status} === 'open' || ${status} === 'error'}"
+                                            buttonText="Choose Signed Form"
+                                            class="fileuploader"
+                                            id="myFileUploader"
+                                            name="myFileUploader"
+                                            tooltip="Choose your certification form"
+                                            fileType="pdf,docx,doc"
+                                            value="{docPath}"
+                                            change=".uiEventUploadDocumentChange"
+                                            readFilesystemFailed=".uiEventUploadDocumentReadFilesystemFailed"
+                                            readFilesystemSucceeded=".uiEventUploadDocumentReadFilesystemSucceeded"
+                                            placeholder="Choose a file for Upload...">
+                        </ext:WFFileUploader>
+                    </VBox>
+            </VBox>
+
+            <Button visible="{= ${status} === 'open' || ${status} === 'error'}"
+                    type="{= ${docPath} !== null ? 'Emphasized' : 'Default'}"
+                    enabled="{= ${docPath} !== null}"
+                    class="sapUiSmallMarginTop substep"
+                    text="Upload"
+                    press=".uiEventUploadDocument($controller.byId('myFileUploader'))">
+            </Button>
+
+			<VBox class="substep"
+                  visible="{= ${status} !== 'open'}">
+			    <Text visible="{= ${status} === 'inprocess'}" class="sapUiSmallMarginTop successtext" text="The document is being uploaded.  Please wait." />
+			    <Text visible="{= ${status} === 'error'}" class="sapUiSmallMarginTop successtext" text="It was not possible to upload the document: {errorMsg}" />
+			    <Text visible="{= ${status} === 'completed'}" class="sapUiSmallMarginTop successtext" text="The document was uploaded successfully." />
+            </VBox>
+		</Panel>
+	</VBox>
+</core:FragmentDefinition>

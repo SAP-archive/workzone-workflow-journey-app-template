@@ -1,0 +1,22 @@
+{
+	"name": "JourneyCard",
+	"version": "0.0.1",
+	"description": "",
+	"private": true,
+	"devDependencies": {
+		"@sap/ui5-builder-webide-extension": "1.0.9",
+		"@ui5/cli": "^1.14.0",
+		"eslint": "^5.16.0",
+		"rimraf": "^2.6.2"
+	},
+	"scripts": {
+		"build": "ui5 build --include-task=generateManifestBundle generateCachebusterInfo",
+		"start": "ui5 serve",
+		"build-zip": "rimraf dist && ui5 build && rimraf dist/test && zip ../journeycard.widget.zip -r ./dist "
+	},
+	"ui5": {
+		"dependencies": [
+			"@sap/ui5-builder-webide-extension"
+		]
+	}
+}
