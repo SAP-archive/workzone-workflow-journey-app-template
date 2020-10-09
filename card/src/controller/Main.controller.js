@@ -38,14 +38,12 @@ sap.ui.define(
 
                     // resolve destinations
                     Promise.all([
-                        this._card.resolveDestination("mySFDestination"),
                         this._card.resolveDestination("myJAMDestination"),
                         this._card.resolveDestination("myCMISDestination")
                     ]).then((results) => {
                         // we have resolved destinations
-                        this._sfDest = results[0];
-                        this._jamDest = results[1];
-                        this._cmisDest = results[2];
+                        this._jamDest = results[0];
+                        this._cmisDest = results[1];
 
                         this._cardParams = this._card.getCombinedParameters();
 

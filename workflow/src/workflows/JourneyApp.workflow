@@ -645,10 +645,10 @@
 		},
 		"900bc6e4-7ef9-448d-90f8-2c55d15775a1": {
 			"classDefinition": "com.sap.bpm.wfs.Model",
-			"id": "journeyappworkflow2",
+			"id": "sap.wz.journey.template.workflow",
 			"subject": "Example Journey App with Documents",
 			"businessKey": "${context.businessKey}",
-			"name": "JourneyAppWorkflow2",
+			"name": "JourneyTemplateWorkflow",
 			"documentation": "",
 			"lastIds": "9144274f-dd63-49e0-83ae-7ffaf27d2bfa",
 			"events": {

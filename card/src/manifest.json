@@ -79,9 +79,6 @@
         "type": "Component",
         "configuration": {
             "destinations": {
-                "mySFDestination": {
-                    "name": "sfsfdemo"
-                },
                 "myJAMDestination": {
                     "name": "JAM"
                 },
@@ -90,12 +87,6 @@
                 }
             },
             "parameters": {
-                "sfUserId": {
-                    "value": "sfadmin"
-                },
-                "sfCompanyId": {
-                    "value": "SFPART035023"
-                },
                 "approver": {
                     "value": "P000026"
                 },
@@ -103,7 +94,7 @@
                     "value": "JAM"
                 },
                 "workflowDefinitionId": {
-                    "value": "journeyappworkflow2"
+                    "value": "sap.wz.journey.template.workflow"
                 },
                 "userId": {
                     "value": "{context>sap.workzone/currentUser/id/value}",
@@ -149,9 +140,5 @@
 				"src": "./images/plcalendar.svg"
 			}
 		}
-	},
-	"sap.platform.hcp": {
-		"uri": "webapp",
-		"_version": "1.1.0"
 	}
 }
