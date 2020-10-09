@@ -1,0 +1,24 @@
+{
+	"journey-card": {
+		"type": "card",
+		"src": {
+			"git": "https://github.com/SAP-samples/workzone-workflow-journey-app-template.git",
+			"branch": "main",
+			"path": "./card/",
+			"build": "npm i && npm run-script build",
+			"package": "sap-wz-journey-template-card.zip",
+			"manifest": "src/manifest.json"
+		}
+	},
+	"journey-workflow": {
+		"type": "workflow",
+		"src": {
+			"git": "https://github.com/SAP-samples/workzone-workflow-journey-app-template.git",
+			"branch": "main",
+			"path": "./workflow/",
+			"build": "npm i && npm run-script build",
+			"package": "sap-wz-journey-template-workflow.zip",
+			"manifest": "src/manifest.json"
+		}
+	}
+}

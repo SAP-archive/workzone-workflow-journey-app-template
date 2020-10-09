@@ -1,0 +1,1 @@
+require("content-builder-tools").contentpackage.validate(__dirname);

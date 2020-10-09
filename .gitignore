@@ -1,5 +1,10 @@
 mta_archives/
 resources/
-node_modules/
-package-lock.json
 dist/
+__contents/
+node_modules/
+package
+package.zip
+businesshub
+businesshub.zip
+package-lock.json
