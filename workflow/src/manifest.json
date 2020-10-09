@@ -1,0 +1,21 @@
+{
+	"_version": "1.18.0",
+	"sap.artifact": {
+		"id": "sap.wz.journey.template.workflow",
+		"type": "workflow",
+		"title": "Parental Leave",
+		"subTitle": "",
+		"artifactVersion": {
+			"version": "1.0.0"
+		},
+		"shortTitle": "Parental Leave",
+		"info": "workflow part of Parentyal Leave",
+		"description": "workflow part of Parentyal Leave",
+		"tags": {
+			"keywords": [
+				"parental leave",
+				"workflow"
+			]
+		}
+	}
+}

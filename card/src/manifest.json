@@ -1,7 +1,7 @@
 {
 	"_version": "1.12.0",
 	"sap.app": {
-		"id": "com.sap.wz.journey.Example",
+		"id": "sap.wz.journey.template.card",
 		"type": "card",
 		"i18n": "i18n/i18n.properties",
 		"title": "{{appTitle}}",
