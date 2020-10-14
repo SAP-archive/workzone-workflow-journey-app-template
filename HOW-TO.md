@@ -15,8 +15,6 @@
 - **[Workflow Changes](#ryo-workflow-changes)**<br>
 
 **[Building in SAP Business Application Studio](#building-in-bas)**<br>
-- **[Build and Deploy the UI5 Application](#build-ui5-application)**<br>
-- **[Build and Deploy the Workflow](#build-workflow)**<br>
 
 <a name="introduction">
 
@@ -34,6 +32,8 @@ The application consists of two basic building blocks:
 
 1. SAP UI5 Application wrapped in a UI Integration Card
 2. SAP Cloud Platform workflow
+
+These two items are then packaged using Content Packager into a single deployable item, which can be uploaded into SAP Workzone.
 
 The UI5 Application controls and interacts with the workflow through workflow APIs.  The UI5 Application provides the user-facing UX,and the workflow handles other interactions (for example, choreographing approvals, or calls to external services).
 
@@ -612,30 +612,12 @@ New UI events need suitable handlers in the controller.  Also, if state changes 
 ## Building in SAP Buisness Application Studio
 </a>
 
-To deploy this solution to SAP Workzone, you will need to deploy the UI5 Application as a UI Integration Card, and deployt the workflow.
+To deploy the solution  to SAP Workzone, you will need to create a deployable package.  To do this, you must first install the necssary `npm` packages at the root of the directory tree:
 
-<a name="build-ui5-application">
+```
+npm i
+```
 
-### Build and Deploy the UI5 Application
-</a>
+After this, you can use the command `npm run build-all` to build the necessary components.
 
-The file `package.json` defines a build command that should be run to create the necessary artefacts that can then be delivered as a UI Integration Card to Workzone.
-
-You can use the `Run task ...` command in BAS (via the *View > Find Command ...* menu) to look for the npm command to build the application: this should list the npm build command for the application.  This should build the application into a `dist` folder, reday to be packaged and uploaded to SAP Workzone in a deploy step.  The `dist` folder will contain the original application, and also addtional artefacts that optmise the execution of the application at run time.
-
-**Do not edit or change files in the `dist` folder as the files will be re-created every time the applicatin is re-built, and any changes you make will be lost.**
-
-Instead, edit the files in the `webapp` folder.
-
-Once built, you can then use *View > Find Command ...* to execute the `UI Integration Card: Deploy to SAP Workzone` command.  You will be prompted to choose a card to deploy - chose the one under the `dist` folder.  You will also be prompted for a destination to deploy through - choose `WZContentRepository`.  A pop-up will ask for confirmation that the UI Integration Card can deployed (with a specified version).  The version is defined in the `manifest.json` file via the property `sap.app/application.version/version`.
-
-*NOTE*: Every time you deploy the application, you **must** increase the version.  If you do not, the deploy will fail.
-
-<a name="build-workflow">
-
-### Build and Deploy the Workflow
-</a>
-
-The workflow is deployed as an MTA, and there is a suitable `mta.yaml` file  that is used to manage this process.  In the template example, the MTA defines both deployment rules for the workflow, and also the Custom User Task.
-
-To deploy the workflow and user task, right click on the `mta.yaml` file and select `Build MTA`.  When the MTA is built, we can deploy the mtar file under the `mta_archives` folder by right-clicking on the mtar file, and selecting `Deploy MTA Archive`.
+The end result should be a file called `package.zip` which can then be uploaded as a content package into SAP Workzone.
