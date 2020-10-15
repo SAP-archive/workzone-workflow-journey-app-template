@@ -1,4 +1,5 @@
 # SAP Workzone Workflow Journey App Template
+[![REUSE status](https://api.reuse.software/badge/github.com/SAP-samples/workzone-workflow-journey-app-template)](https://api.reuse.software/info/github.com/SAP-samples/workzone-workflow-journey-app-template)
 
 ## Description
 
