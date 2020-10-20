@@ -286,9 +286,9 @@ Each sub-step is held in a separate file defined through the `Fragment` componen
                     complete=".uiEventWizardStep1Complete">
 			<Title text="Apply for leave" titleStyle="H3" class="sapUiSmallMarginBottom shiftHeader plheader" />
 
-			<core:Fragment type="XML" fragmentName="com.sap.wz.journey.Example.view.fragments.step1_1_consultation" />
-			<core:Fragment type="XML" fragmentName="com.sap.wz.journey.Example.view.fragments.step1_2_uploadDocuments" />
-			<core:Fragment type="XML" fragmentName="com.sap.wz.journey.Example.view.fragments.step1_3_createLeaveRequest" />
+			<core:Fragment type="XML" fragmentName="sap.wz.journey.template.card.view.fragments.step1_1_consultation" />
+			<core:Fragment type="XML" fragmentName="sap.wz.journey.template.card.view.fragments.step1_2_uploadDocuments" />
+			<core:Fragment type="XML" fragmentName="sap.wz.journey.template.card.view.fragments.step1_3_createLeaveRequest" />
 			<VBox class="sapUiSmallMarginBottom"></VBox>
 		</WizardStep>
 ```

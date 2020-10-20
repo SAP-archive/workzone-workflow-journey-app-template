@@ -23,7 +23,7 @@ sap.ui.define(
 
         var DocumentProvider = null;
 
-        return Controller.extend("com.sap.wz.journey.Example.controller.Main",
+        return Controller.extend("sap.wz.journey.template.card.controller.Main",
             {
                 //=================================================================================//
                 // App init                                                                        //

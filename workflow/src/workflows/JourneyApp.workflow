@@ -2,7 +2,7 @@
 	"contents": {
 		"3e15c038-39c4-468e-b690-0fb359d88a9a": {
 			"classDefinition": "com.sap.bpm.wfs.ScriptTask",
-			"reference": "/scripts/JourneyApp/SetupContext.js",
+			"reference": "/src/scripts/JourneyApp/SetupContext.js",
 			"id": "scripttask1",
 			"name": "Setup Context"
 		},
@@ -24,7 +24,7 @@
 		},
 		"48cafb91-f21d-45d7-9eb2-44e8cd4daa02": {
 			"classDefinition": "com.sap.bpm.wfs.ScriptTask",
-			"reference": "/scripts/JourneyApp/ValidateResponse.js",
+			"reference": "/src/scripts/JourneyApp/ValidateResponse.js",
 			"id": "scripttask5",
 			"name": "Validate SNOW Response"
 		},
@@ -67,7 +67,7 @@
 		},
 		"abaa8587-1817-44d6-bc0b-6f2fd2bc322b": {
 			"classDefinition": "com.sap.bpm.wfs.ScriptTask",
-			"reference": "/scripts/JourneyApp/CompleteWorkflow.js",
+			"reference": "/src/scripts/JourneyApp/CompleteWorkflow.js",
 			"id": "scripttask8",
 			"name": "Complete Workflow"
 		},
@@ -104,7 +104,7 @@
 		},
 		"13b89e31-0ea2-418b-b7bc-9529eb710a35": {
 			"classDefinition": "com.sap.bpm.wfs.ScriptTask",
-			"reference": "/scripts/JourneyApp/ValidateLeaveRequest.js",
+			"reference": "/src/scripts/JourneyApp/ValidateLeaveRequest.js",
 			"id": "scripttask2",
 			"name": "Validate Leave Request Message",
 			"documentation": "Check message received is OK"
@@ -922,43 +922,43 @@
 		},
 		"bd351301-b0e8-444d-b7f3-bc084cbddf0c": {
 			"classDefinition": "com.sap.bpm.wfs.ScriptTask",
-			"reference": "/scripts/JourneyApp/SetupForWait.js",
+			"reference": "/src/scripts/JourneyApp/SetupForWait.js",
 			"id": "scripttask10",
 			"name": "Setup For Wait for Leave Request"
 		},
 		"1a993072-c45a-4829-91fe-2c60f7e0a35c": {
 			"classDefinition": "com.sap.bpm.wfs.ScriptTask",
-			"reference": "/scripts/JourneyApp/SetupForWait3.js",
+			"reference": "/src/scripts/JourneyApp/SetupForWait3.js",
 			"id": "scripttask12",
 			"name": "Validate SF Response"
 		},
 		"162df8a4-bb11-4f61-893d-4dd2685f59b5": {
 			"classDefinition": "com.sap.bpm.wfs.ScriptTask",
-			"reference": "/scripts/JourneyApp/SetupContext2.js",
+			"reference": "/src/scripts/JourneyApp/SetupContext2.js",
 			"id": "scripttask15",
 			"name": "Prepare for SNOW"
 		},
 		"d1af674d-5fa7-4c19-aa34-d013dbc2c99f": {
 			"classDefinition": "com.sap.bpm.wfs.ScriptTask",
-			"reference": "/scripts/JourneyApp/PrepareForManagerDiscussion.js",
+			"reference": "/src/scripts/JourneyApp/PrepareForManagerDiscussion.js",
 			"id": "scripttask16",
 			"name": "Prepare for Manager Discussion"
 		},
 		"d2977543-6a90-4663-a57e-73e46abf8443": {
 			"classDefinition": "com.sap.bpm.wfs.ScriptTask",
-			"reference": "/scripts/JourneyApp/ValidateManagerDiscussionDetails.js",
+			"reference": "/src/scripts/JourneyApp/ValidateManagerDiscussionDetails.js",
 			"id": "scripttask17",
 			"name": "Confirm Manager Discussion Details"
 		},
 		"b432b4ce-4382-4a1e-9cd3-d26a56c94599": {
 			"classDefinition": "com.sap.bpm.wfs.ScriptTask",
-			"reference": "/scripts/JourneyApp/SetupForWait4.js",
+			"reference": "/src/scripts/JourneyApp/SetupForWait4.js",
 			"id": "scripttask19",
 			"name": "Prepare For Confirm Workflow Complete"
 		},
 		"74e1d668-eb9d-413f-9426-7f7fcc9ed6ef": {
 			"classDefinition": "com.sap.bpm.wfs.ScriptTask",
-			"reference": "/scripts/JourneyApp/FinalDismiss.js",
+			"reference": "/src/scripts/JourneyApp/FinalDismiss.js",
 			"id": "scripttask20",
 			"name": "Prepare for Final Dismiss"
 		},
@@ -970,19 +970,19 @@
 		},
 		"b429a4c9-f764-40b2-9b80-ab43dc2de597": {
 			"classDefinition": "com.sap.bpm.wfs.ScriptTask",
-			"reference": "/scripts/JourneyApp/SetupForWait5.js",
+			"reference": "/src/scripts/JourneyApp/SetupForWait5.js",
 			"id": "scripttask21",
 			"name": "Prepare for Wait for Due Date"
 		},
 		"35e782c0-aee0-4b56-9e80-1597e41eaaef": {
 			"classDefinition": "com.sap.bpm.wfs.ScriptTask",
-			"reference": "/scripts/JourneyApp/SetupForWaitForFeedback.js",
+			"reference": "/src/scripts/JourneyApp/SetupForWaitForFeedback.js",
 			"id": "scripttask22",
 			"name": "Prepare for Feedback Upload"
 		},
 		"54ed0ce3-703b-43ea-b1bc-84c634f7035a": {
 			"classDefinition": "com.sap.bpm.wfs.ScriptTask",
-			"reference": "/scripts/JourneyApp/ConfirmFeedbackUpload.js",
+			"reference": "/src/scripts/JourneyApp/ConfirmFeedbackUpload.js",
 			"id": "scripttask23",
 			"name": "Feedback Uploaded"
 		},
@@ -993,7 +993,7 @@
 			"isHiddenInLogForParticipant": false,
 			"userInterface": "sapui5://comsapbpmworkflow.comsapbpmwusformplayer/com.sap.bpm.wus.form.player",
 			"recipientUsers": "${context.journeyApp.leaveRequest.approver}",
-			"formReference": "/forms/JourneyApp/approveLeaveRequest.form",
+			"formReference": "/src/forms/JourneyApp/approveLeaveRequest.form",
 			"userInterfaceParams": [{
 				"key": "formId",
 				"value": "approveleaverequest"
@@ -1016,15 +1016,22 @@
 			"subject": "Confirm Meeting Request For Leave Discussion",
 			"priority": "MEDIUM",
 			"isHiddenInLogForParticipant": false,
-			"userInterface": "sapui5://managerDiscussion.comsapwzjourneymanagerDiscussion/com.sap.wz.journey.managerDiscussion",
+			"userInterface": "sapui5://comsapbpmworkflow.comsapbpmwusformplayer/com.sap.bpm.wus.form.player",
 			"recipientUsers": "${context.journeyApp.leaveRequest.approver}",
-			"userInterfaceParams": [],
+			"formReference": "/src/forms/JourneyApp/confirmMeetingRequest.form",
+			"userInterfaceParams": [{
+				"key": "formId",
+				"value": "confirmmeetingrequest"
+			}, {
+				"key": "formRevision",
+				"value": "1.0"
+			}],
 			"id": "usertask3",
 			"name": "Confirm Meeting Request"
 		},
 		"27e3e693-e7e7-48d2-8497-a05f70a881c5": {
 			"classDefinition": "com.sap.bpm.wfs.ScriptTask",
-			"reference": "/scripts/JourneyApp/CheckMeetingRequestDecision.js",
+			"reference": "/src/scripts/JourneyApp/CheckMeetingRequestDecision.js",
 			"id": "scripttask24",
 			"name": "CheckMeetingRequestDecision"
 		},

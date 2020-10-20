@@ -42,13 +42,13 @@
 	"sap.ui5": {
 		"flexEnabled": false,
 		"rootView": {
-			"viewName": "com.sap.wz.journey.Example.view.Main",
+			"viewName": "sap.wz.journey.template.card.view.Main",
 			"type": "XML",
 			"async": true,
 			"id": "Main"
 		},
 		"dependencies": {
-			"minUI5Version": "1.65.6",
+			"minUI5Version": "1.82.2",
 			"libs": {
 				"sap.ui.layout": {},
 				"sap.ui.core": {},
@@ -63,7 +63,7 @@
 			"i18n": {
 				"type": "sap.ui.model.resource.ResourceModel",
 				"settings": {
-					"bundleName": "com.sap.wz.journey.Example.i18n.i18n"
+					"bundleName": "sap.wz.journey.template.card.i18n.i18n"
 				}
 			}
 		},
@@ -88,13 +88,19 @@
             },
             "parameters": {
                 "approver": {
-                    "value": "P000026"
+                    "value": "P000026",
+                    "type": "string",
+                    "label": "Approver"
                 },
                 "documentProvider": {
-                    "value": "JAM"
+                    "value": "JAM",
+                    "type": "string",
+                    "label": "Document Provider"
                 },
                 "workflowDefinitionId": {
-                    "value": "sap.wz.journey.template.workflow"
+                    "value": "sap.wz.journey.template.workflow",
+                    "type": "string",
+                    "label": "Workflow Definition ID"
                 },
                 "userId": {
                     "value": "{context>sap.workzone/currentUser/id/value}",

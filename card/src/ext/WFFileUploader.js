@@ -8,7 +8,7 @@ sap.ui.define([
 ) {
     "use strict";
 
-    var WFFileUploader = FileUploader.extend("com.sap.wz.journey.Example.ext.WFFileUploader", {
+    var WFFileUploader = FileUploader.extend("sap.wz.journey.template.card.ext.WFFileUploader", {
         metadata: {
             events: {
                 readFilesystemFailed: {

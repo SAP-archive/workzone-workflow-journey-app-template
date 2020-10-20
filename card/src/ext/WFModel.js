@@ -8,7 +8,7 @@ sap.ui.define([
 ) {
     "use strict";
 
-    var WFModel = JSONModel.extend("com.sap.wz.journey.Example.ext.WFModel", {
+    var WFModel = JSONModel.extend("sap.wz.journey.template.card.ext.WFModel", {
         constructor: function(oData, bObserve, controller) {
             this._ctx = controller;
             JSONModel.call(this, oData, bObserve);

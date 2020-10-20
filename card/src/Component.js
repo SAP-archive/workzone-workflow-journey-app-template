@@ -5,7 +5,7 @@ sap.ui.define([
 ], function (UIComponent, Device, models) {
 	"use strict";
 
-	return UIComponent.extend("com.sap.wz.journey.Example.Component", {
+	return UIComponent.extend("sap.wz.journey.template.card.Component", {
 
 		metadata: {
 			manifest: "json"

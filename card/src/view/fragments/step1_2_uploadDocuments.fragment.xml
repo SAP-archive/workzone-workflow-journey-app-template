@@ -4,7 +4,7 @@
 	xmlns:core="sap.ui.core" 
 	xmlns:u="sap.ui.unified" 
     xmlns:mvc="sap.ui.core.mvc"
-    xmlns:ext="com.sap.wz.journey.Example.ext">
+    xmlns:ext="sap.wz.journey.template.card.ext">
 	<VBox id="Step1_substep2_uploadDocuments"
           class="substepMarginLeft substepActive"
           visible="{= ${visible}}"
