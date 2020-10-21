@@ -33,7 +33,7 @@ The application consists of two basic building blocks:
 1. SAP UI5 Application wrapped in a UI Integration Card
 2. SAP Cloud Platform workflow
 
-These two items are then packaged using Content Packager into a single deployable item, which can be uploaded into SAP Workzone.
+These two items are then packaged using Content Packager into a single deployable item, which can be uploaded into SAP Work Zone.
 
 The UI5 Application controls and interacts with the workflow through workflow APIs.  The UI5 Application provides the user-facing UX,and the workflow handles other interactions (for example, choreographing approvals, or calls to external services).
 
@@ -78,9 +78,9 @@ https://openui5.hana.ondemand.com/entity/sap.m.Wizard
 
 #### UI Integration Card
 
-The application is delivered to SAP Workzone as a UI Integration Card.  This is defined in the file `manifest.json` via the property `sap.app/type`, which should be the string `card`.  In this case, we are deliveringn the appliucation as a `Component` card, so this card type is set via `sap.card/type`.
+The application is delivered to SAP Work Zone as a UI Integration Card.  This is defined in the file `manifest.json` via the property `sap.app/type`, which should be the string `card`.  In this case, we are deliveringn the appliucation as a `Component` card, so this card type is set via `sap.card/type`.
 
-The application has two sets of property that determine the title and description that will be available in SAP Workzone.  The first set are under `sap.app/title` and `sap.app/description`: these determine the title and description visible to the administrator of SAP Workzone.  They can be internationalised using a property file under `i18n/i18n_<language>.properties`.  For example, to set English title and decsription, ensure the file `i18n_en.properties` exists with the necessary English strings.  See this link for some more details on internationalising your application:
+The application has two sets of property that determine the title and description that will be available in SAP Work Zone.  The first set are under `sap.app/title` and `sap.app/description`: these determine the title and description visible to the administrator of SAP Work Zone.  They can be internationalised using a property file under `i18n/i18n_<language>.properties`.  For example, to set English title and decsription, ensure the file `i18n_en.properties` exists with the necessary English strings.  See this link for some more details on internationalising your application:
 
 https://sapui5.hana.ondemand.com/1.36.6/docs/guide/df86bfbeab0645e5b764ffa488ed57dc.html
 
@@ -612,7 +612,7 @@ New UI events need suitable handlers in the controller.  Also, if state changes 
 ## Building in SAP Buisness Application Studio
 </a>
 
-To deploy the solution  to SAP Workzone, you will need to create a deployable package.  To do this, you must first install the necssary `npm` packages at the root of the directory tree:
+To deploy the solution  to SAP Work Zone, you will need to create a deployable package.  To do this, you must first install the necssary `npm` packages at the root of the directory tree:
 
 ```
 npm i
@@ -620,4 +620,4 @@ npm i
 
 After this, you can use the command `npm run build-all` to build the necessary components.
 
-The end result should be a file called `package.zip` which can then be uploaded as a content package into SAP Workzone.
+The end result should be a file called `package.zip` which can then be uploaded as a content package into SAP Work Zone.
