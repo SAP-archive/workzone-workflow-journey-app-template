@@ -1,10 +1,10 @@
 {
 	"name": "sap-wz-journey-template-card",
-	"version": "0.0.1",
+	"version": "0.0.2",
 	"description": "",
 	"private": true,
 	"devDependencies": {
-		"content-builder-tools": "git+https://git@github.wdf.sap.corp/sap-work-zone/content-builder-tools.git",
+		"sap-workzone-cpkg-tools": "https://github.com/SAP-samples/workzone-content-package-templates.git",
 		"@sap/ui5-builder-webide-extension": "1.0.9",
 		"@ui5/cli": "^1.14.0",
 		"eslint": "^5.16.0",

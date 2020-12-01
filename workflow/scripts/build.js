@@ -1,1 +1,1 @@
-require("content-builder-tools").workflow.build(__dirname);
+require("sap-workzone-cpkg-tools").workflow.build(__dirname);

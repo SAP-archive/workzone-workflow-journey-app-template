@@ -1,7 +1,7 @@
 {
 	"name": "sap-wz-journey-template-contentpackage",
 	"description": "Journey Template Content Package",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"scripts": {
 		"build": "node scripts/build.js",
 		"pull": "node scripts/pull.js",
@@ -10,11 +10,11 @@
 	},
 	"repository": {
 		"type": "git",
-		"url": "git@github.com:SAP-samples/workzone-workflow-journey-app-template.git"
+		"url": "https://github.com/SAP-samples/workzone-workflow-journey-app-template.git"
 	},
 	"author": "",
 	"license": "ISC",
 	"devDependencies": {
-		"content-builder-tools": "git+https://git@github.wdf.sap.corp/sap-work-zone/content-builder-tools.git"
+		"sap-workzone-cpkg-tools": "https://github.com/SAP-samples/workzone-content-package-templates.git"
 	}
 }

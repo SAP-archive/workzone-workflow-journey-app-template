@@ -1,1 +1,1 @@
-require("content-builder-tools").card.build(__dirname);
+require("sap-workzone-cpkg-tools").card.build(__dirname);
