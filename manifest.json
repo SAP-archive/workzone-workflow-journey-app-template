@@ -2,7 +2,7 @@
 	"sap.package": {
 		"id": "sap.wz.journey.template",
 		"packageVersion": {
-			"version": "1.0.0",
+			"version": "1.0.1",
 			"upgradeNotification": "all"
 		},
 		"vendor": {
