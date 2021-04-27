@@ -173,19 +173,24 @@ sap.ui.define([], function () {
         });
     }
 
-    function createWorkflowInstance(workflowDefinitionId, context) {
-        return getCsrfToken().then((csrfToken) => {
-            return makeAjaxRequest(
-                "/workflow-instances/",
-                "POST",
-                {
-                    definitionId: workflowDefinitionId,
-                    context: context || {},
-                },
-                {
-                    "X-Csrf-Token": csrfToken,
-                }
-            );
+    function retrieveWorkflowInstance(instanceId) {
+        Promise.all([
+            getWorkflowInstance(instanceId),
+            getWorkflowInstanceContext(instanceId)
+        ]).then((results) => ({
+            "instance": results[0],
+            "context": results[1]
+        }));
+    }
+
+    function retrieveWorkflowInstanceWithCallback(instanceId, callback, error) {
+        retrieveWorkflowInstance(
+            instanceId
+        ).then((result) => {
+            callback(result.instance, result.context);
+        }).catch((err) => {
+            console.error(err);
+            error(err);
         });
     }
 
@@ -255,6 +260,18 @@ sap.ui.define([], function () {
         }));
     }
 
+    function updateWorkflowInstanceWithCallback(instanceId, status, callback, error) {
+        updateWorkflowInstance(
+            instanceId,
+            status
+        ).then((result) => {
+            callback(result.instance, result.context, result.executionLogs);
+        }).catch((err) => {
+            console.error(err);
+            error(err);
+        });
+    }
+
     function cancelWorkflowInstance(instanceId) {
         return updateWorkflowInstance(instanceId, "CANCELED");
     }
@@ -306,7 +323,7 @@ sap.ui.define([], function () {
         });
     }
 
-    function advanceWorkflow(workflowDefinitionId, messageId, businessKey, instanceId, data) {
+    function advanceWorkflowInstance(workflowDefinitionId, messageId, businessKey, instanceId, data) {
         return sendWorkflowMessage(
             messageId,
             workflowDefinitionId,
@@ -334,8 +351,8 @@ sap.ui.define([], function () {
         }))
     }
 
-    function advanceWorkflowWithCallback(workflowDefinitionId, messageId, businessKey, instanceId, data, callback, error) {
-        advanceWorkflow(
+    function advanceWorkflowInstanceWithCallback(workflowDefinitionId, messageId, businessKey, instanceId, data, callback, error) {
+        advanceWorkflowInstance(
             workflowDefinitionId,
             messageId,
             businessKey,
@@ -354,6 +371,121 @@ sap.ui.define([], function () {
         });
     }
 
+    function createWorkflowInstance(workflowDefinitionId, context) {
+        return getCsrfToken().then((csrfToken) => {
+            return makeAjaxRequest(
+                "/workflow-instances/",
+                "POST",
+                {
+                    definitionId: workflowDefinitionId,
+                    context: context || {},
+                },
+                {
+                    "X-Csrf-Token": csrfToken,
+                }
+            );
+        });
+    }
+
+    function createWorkflowInstandAndFetchContext(definitionId, businessKey, context, status) {
+        return createWorkflowInstance(
+            definitionId,
+            context
+        ).then((result) => {
+            console.log("=================== CREATED WORKFLOW INSTANCE ===================");
+            console.log(result);
+            return result;
+        }).then(() => getSingleContextForBusinessKey(
+            definitionId,
+            businessKey,
+            status
+        ));
+    }
+
+    function createWorkflowInstandAndFetchContextWithCallback(definitionId, businessKey, context, status, callback, error) {
+        createWorkflowInstandAndFetchContext(
+            definitionId,
+            businessKey,
+            context,
+            status
+        ).then((result) => {
+            if (!result) {
+                // sometimes we get nothing back - try again
+                console.warn("Failed to get instance on first query");
+                getSingleContextForBusinessKey(
+                    definitionId,
+                    businessKey,
+                    status
+                ).then((result) => {
+                    if (!result) {
+                        var err = new Error("No instance returned after creation");
+                        console.error(err);
+                        error(err);
+                    } else {
+                        callback(result.instance, result.context, result.executionLogs);
+                    }
+                });
+            } else {
+                callback(result.instance, result.context, result.executionLogs);
+            }
+        }).catch((err) => {
+            //TODO hide busyindicator
+            console.error(err);
+            error(err);
+        });
+    }
+
+    /**
+     * Wait for a workflow instance to complete (status becomes *not* RUNNING).
+     * The method repeatedly polls until the status reaches the correct value.
+     * Returns a promise that resolves when the status reaches the correct value.
+     * 
+     * @param  {} instanceId
+     */
+    function waitForInstanceComplete(instanceId) {
+        return new Promise(function (resolve) {
+            setTimeout(function () {
+                console.log("Polling instance...");
+                getWorkflowInstance(instanceId).then(
+                    function (instance) {
+                        if (instance.status === "RUNNING") {
+                            return waitForInstanceComplete(instanceId);
+                        } else {
+                            resolve();
+                        }
+                    }
+                );
+            }, 3000);
+        });
+    }
+    
+    /**
+     * Wait for a workflow instance to complete (status becomes *not* RUNNING).
+     * The method repeatedly polls until the status reaches the correct value.
+     * When the status reaches a non-RUNNING value, the callback is executed (else on error the error
+     * handler is called).
+     * 
+     * @param  {} instanceId
+     * @param  {} callback
+     * @param  {} error
+     */
+    function waitForInstanceCompleteWithCallback(instanceId, callback, error) {
+        waitForInstanceComplete(instanceId)
+            .then(callback)
+            .catch((err) => {
+                console.error(err);
+                error(err)
+            });
+    }
+
+    /**
+     * Locate a single matching workflow instance that matches the supplied definition ID, business key and status.
+     * Returns a promise that resolves successfully to the first matched instance, else rejects with an error.
+     * 
+     * @param  {} definitionId
+     * @param  {} businessKey
+     * @param  {} status
+     */
     function getSingleContextForBusinessKey(definitionId, businessKey, status) {
         // returns [ { instance, context}, ... ]
         var query = {
@@ -410,6 +542,18 @@ sap.ui.define([], function () {
         });
     }
 
+    /**
+     * Locate a single matching workflow instance that matches the supplied definition ID, business key and status.
+     * If multiple matches are found, return the first one.
+     * If none are found, return null.
+     * Execute callback function on success, else call error handler.
+     * 
+     * @param  {} definitionId
+     * @param  {} businessKey
+     * @param  {} status
+     * @param  {} callback
+     * @param  {} error
+     */
     function getSingleContextForBusinessKeyWithCallback(definitionId, businessKey, status, callback, error) {
         getSingleContextForBusinessKey(
             definitionId,
@@ -429,101 +573,37 @@ sap.ui.define([], function () {
         });
     }
 
-    function createWorkflowInstandAndFetchContext(definitionId, businessKey, context, status) {
-        return createWorkflowInstance(
-            definitionId,
-            context
-        ).then((result) => {
-            console.log("=================== CREATED WORKFLOW INSTANCE ===================");
-            console.log(result);
-            return result;
-        }).then(() => getSingleContextForBusinessKey(
-            definitionId,
-            businessKey,
-            status
-        ));
-    }
-
-    function createWorkflowInstandAndFetchContextWithCallback(definitionId, businessKey, context, status, callback, error) {
-        createWorkflowInstandAndFetchContext(
-            definitionId,
-            businessKey,
-            context,
-            status
-        ).then((result) => {
-            if (!result) {
-                // sometimes we get nothing back - try again
-                console.warn("Failed to get instance on first query");
-                getSingleContextForBusinessKey(
-                    definitionId,
-                    businessKey,
-                    status
-                ).then((result) => {
-                    if (!result) {
-                        var err = new Error("No instance returned after creation");
-                        console.error(err);
-                        error(err);
-                    } else {
-                        callback(result.instance, result.context, result.executionLogs);
-                    }
-                });
-            } else {
-                callback(result.instance, result.context, result.executionLogs);
-            }
-        }).catch((err) => {
-            //TODO hide busyindicator
-            console.error(err);
-            error(err);
-        });
-    }
-
-    function waitForInstanceComplete(instanceId) {
-        return new Promise(function (resolve) {
-            setTimeout(function () {
-                console.log("Polling instance...");
-                getWorkflowInstance(instanceId).then(
-                    function (instance) {
-                        if (instance.status === "RUNNING") {
-                            return waitForInstanceComplete(instanceId);
-                        } else {
-                            resolve();
-                        }
-                    }
-                );
-            }, 3000);
-        });
-    }
-
-    function waitForInstanceCompleteWithCallback(instanceId, callback) {
-        waitForInstanceComplete(instanceId).then(callback);
-    }
-
     return {
         getWorkflowDefinitionModel: getWorkflowDefinitionModel,
         getFormModel: getFormModel,
         getWorkflowDefinitionList: getWorkflowDefinitionList,
         getWorkflowInstanceList: getWorkflowInstanceList,
         getWorkflowInstance: getWorkflowInstance,
+        getWorkflowInstanceContext: getWorkflowInstanceContext,
+        createWorkflowInstance: createWorkflowInstance,
         getTaskInstanceList: getTaskInstanceList,
         getTaskInstanceForm: getTaskInstanceForm,
         getTaskInstanceContext: getTaskInstanceContext,
-        getWorkflowInstanceContext: getWorkflowInstanceContext,
-        createWorkflowInstance: createWorkflowInstance,
         updateTaskInstance: updateTaskInstance,
+        //
         sendWorkflowMessage: sendWorkflowMessage,
         //
         getSingleContextForBusinessKey: getSingleContextForBusinessKey,
         getSingleContextForBusinessKeyWithCallback: getSingleContextForBusinessKeyWithCallback,
+        retrieveWorkflowInstance: retrieveWorkflowInstance,
+        retrieveWorkflowInstanceWithCallback: retrieveWorkflowInstanceWithCallback,
         createWorkflowInstandAndFetchContext: createWorkflowInstandAndFetchContext,
         createWorkflowInstandAndFetchContextWithCallback: createWorkflowInstandAndFetchContextWithCallback,
+        updateWorkflowInstance: updateWorkflowInstance,
+        updateWorkflowInstanceWithCallback: updateWorkflowInstanceWithCallback,
         updateWorkflowContext: updateWorkflowContext,
         updateWorkflowContextWithCallback: updateWorkflowContextWithCallback,
         cancelWorkflowInstance: cancelWorkflowInstance,
         cancelWorkflowInstanceWithCallback: cancelWorkflowInstanceWithCallback,
         restartWorkflowInstance: restartWorkflowInstance,
         restartWorkflowInstanceWithCallback: restartWorkflowInstanceWithCallback,
-        advanceWorkflow: advanceWorkflow,
-        advanceWorkflowWithCallback: advanceWorkflowWithCallback,
+        advanceWorkflowInstance: advanceWorkflowInstance,
+        advanceWorkflowInstanceWithCallback: advanceWorkflowInstanceWithCallback,
         waitForInstanceComplete: waitForInstanceComplete,
         waitForInstanceCompleteWithCallback: waitForInstanceCompleteWithCallback,
     };
