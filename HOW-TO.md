@@ -609,10 +609,34 @@ New UI events need suitable handlers in the controller.  Also, if state changes 
 
 <a name="building-in-bas">
 
-## Building in SAP Buisness Application Studio
+## Building in SAP Buisness Application Studio or Locally
 </a>
 
-To deploy the solution  to SAP Work Zone, you will need to create a deployable package.  To do this, you must first install the necssary `npm` packages at the root of the directory tree:
+<a name="bas-requirements">
+
+### Requirements
+</a>
+
+Prior to building and deploying the package, it will be necessary to install SAP's UI5 tools.  On BAS, you can do this by ensuring that your dev space includes the necssary UI5 tooling as part of the configuration.
+
+For a local system, follow the installation instructions here:
+
+<a href="https://sap.github.io/ui5-tooling/">UI5 Tooling</a>
+
+To verify that the UI5 tooling is deployed, simply execute
+
+```
+ui5 -v
+```
+
+This should return the currently installed version number of UI5.  If this fails to execute, then UI5 is not available and will need to be installed.
+
+
+<a name="bas-building-and-deploying">
+
+### Building and Deploying
+</a>
+To deploy the solution to SAP Work Zone, you will need to create a deployable package.  To do this, you must first install the necessary `npm` packages at the root of the directory tree:
 
 ```
 npm i
