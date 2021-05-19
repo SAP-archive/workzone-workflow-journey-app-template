@@ -23,11 +23,11 @@
 				<Label text="Your baby's due date"
                        required="{= ${status} === 'open' || ${status} === 'error'}"/>
 				<DatePicker id="sections_dueDate_value"
-                            maxDate="{path:'dueDate', formatter:'.formatMaxDueDate'}"
-                            minDate="{path:'dueDate', formatter:'.formatMinDueDate'}"
+                            maxDate="{path:'dueDate', formatter:'.formatter.formatMaxDueDate'}"
+                            minDate="{path:'dueDate', formatter:'.formatter.formatMinDueDate'}"
                             value="{path:'dueDate'}"
                             valueFormat="yyyy-MM-dd'T'hh:mm:ss.SSS'Z'"
-                            change=".checkAndSetDueDate"
+                            change=".formatter.checkAndSetDueDate"
                             width="300px"
                             editable="{= ${status} === 'open' || ${status} === 'error'}"/>
 			</VBox>
