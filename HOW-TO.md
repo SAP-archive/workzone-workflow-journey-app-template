@@ -133,7 +133,7 @@ Within the application, you can then resolve the path that the destination is re
 
 ```
 
-Then you can use the resolved URLs to access the necssary destinations.
+Then you can use the resolved URLs to access the necessary destinations.
 
 Parameters can be passed to the application via the `parameters` section:
 
