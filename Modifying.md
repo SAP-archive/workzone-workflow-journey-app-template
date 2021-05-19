@@ -3,7 +3,7 @@
 Chris Jobson
 27th April 2021
 
-# Table of Contents {#table-of-contents .TOC-Heading}
+## Table of Contents
 
 [Introduction](#introduction)
 
@@ -17,9 +17,9 @@ Chris Jobson
 
 There are different ways to extend or modify behaviour.
 
-1)  Modify the **[workflow]{.ul}** with no difference to the sync points
+1)  Modify the **workflow** with no difference to the sync points
 
-2)  Modify the **[application UI]{.ul}** with no difference to the sync
+2)  Modify the **application UI** with no difference to the sync
     points
 
 3)  Add new sync points
@@ -28,7 +28,7 @@ Leaving the sync points alone means that the application and workflow
 can be independently modified but still work together. Effectively the
 application and workflow fit together and will continue to work.
 
-# Modify the **[workflow]{.ul}** with no difference to the sync points
+# Modify the **workflow** with no difference to the sync points
 
 The underlying workflow can be adjusted easily if there are no changes
 to the sync points. In this case, simply add extra steps in the
@@ -53,7 +53,7 @@ The main thing to note is that when adding additional workflow steps,
 provided the Intermediate Message event points are untouched, you can
 add as many extra steps as you want.
 
-# Modify the **[application UI]{.ul}** with no difference to the sync points
+# Modify the **application UI** with no difference to the sync points
 
 In this case, simply add more UI steps, and after each UI step is
 complete simply update the context object (no need to advance the
