@@ -15,59 +15,17 @@ Chris Jobson
 
 [Technical Application Structure](#technical-application-structure)
 
-[Component](#component)
-
-[XML View](#xml-view)
-
-[Controller](#controller)
-
-[Model](#model)
-
-[manifest.json](#manifest.json)
-
-[I18n Properties](#i18n-properties)
-
 [Application Lifecycle/Events](#application-lifecycleevents)
 
 [Underlying Model](#underlying-model)
 
-[Context Object](#context-object)
-
-[Instance Object](#instance-object)
-
-[Definition ID](#definition-id)
-
 [UI Layout](#ui-layout)
 
-[Basic Guidelines](#basic-guidelines)
-
-[Structural Composition](#structural-composition)
-
 [UI Bindings](#ui-bindings)
-
-[Top Level Wizard View](#top-level-wizard-view)
-
-[/instance/status](#instancestatus)
-
-[/context/<app name>/stepValidated](#contextapp-namestepvalidated)
-
-[/context/<app name>/state](#contextapp-namestate)
-
-[Sub-Step View](#sub-step-view)
 
 [Controller Event Handling](#controller-event-handling)
 
 [Workflow API Calls](#workflow-api-calls)
-
-[Query Workflow](#query-workflow)
-
-[Advance Workflow](#advance-workflow)
-
-[Create Workflow](#create-workflow)
-
-[Update Workflow](#update-workflow)
-
-[Terminate Workflow](#terminate-workflow)
 
 [Moving to the Next Wizard Step](#moving-to-the-next-wizard-step)
 
@@ -75,23 +33,13 @@ Chris Jobson
 
 [Workflow](#workflow)
 
-[Overview](#overview)
-
-[Use of Intermediate Message Events](#use-of-intermediate-message-events)
-
 [Application Issues](#application-issues)
 
 [Missing Workflow Features or Capabilities](#missing-workflow-features-or-capabilities)
 
-[Error Handling](#error-handling)
-
-[Pre- and Post-Intermediate Message Event Processing](#pre--and-post-intermediate-message-event-processing)
-
 [Next Steps](#next-steps)
 
 [Appendix](#appendix)
-
-[Example GIT repos](#example-git-repos)
 
 # Introduction
 
