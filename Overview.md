@@ -65,7 +65,7 @@ Descriptor schema. It can be built using standard tooling (for example,
 in Business Application Studio), or built locally in a developer's local
 environment. The deployment package is a simple ZIP file containing the
 manifest, and the component resources (which as a minimum would consist
-of a Component.js file, XML view files, and i18m resources, plus some
+of a `Component.js` file, XML view files, and i18m resources, plus some
 other support JavaScript files.
 
 The workflow can be built and deployed using standard Workflow tooling
@@ -259,6 +259,8 @@ components and design patterns.
 
 It has the following overall structure:
 
+-   UI Integration Card
+
 -   Component
 
 -   XML View
@@ -267,24 +269,142 @@ It has the following overall structure:
 
 -   Model
 
--   manifest.json
+-   `manifest.json`
 
 -   I18n properties
 
+## UI Integration Card
+
+The application is delivered to SAP Work Zone as a UI Integration Card.  This is defined in the file `manifest.json` via the property `sap.app/type`, which should be the string `card`.  In this case, we are deliveringn the appliucation as a `Component` card, so this card type is set via `sap.card/type`.
+
+The application has two sets of property that determine the title and description that will be available in SAP Work Zone.  The first set are under `sap.app/title` and `sap.app/description`: these determine the title and description visible to the administrator of SAP Work Zone.  They can be internationalised using a property file under `i18n/i18n_<language>.properties`.  For example, to set English title and decsription, ensure the file `i18n_en.properties` exists with the necessary English strings.  See this link for some more details on internationalising your application:
+
+https://sapui5.hana.ondemand.com/1.36.6/docs/guide/df86bfbeab0645e5b764ffa488ed57dc.html
+
+The second set of properties that are relevant to naming and describing the application are those in the UI Integration Card section.  These are displayed to the end user when the Card is rendered in a workplace.  These are defined under `sap.card/header/title` and `sap.card/header/subTitle`, and an optional icon defined in `sap.app/header/icon/src`.
+
+Also defined under `sap.card` are configuration values relevant to the runtime execution of the application.  These are defined via `sap.card/configuration`, and consit of two basica types: 
+
+1. destinations used by the application
+2. parameters used to control the behaviour of the application
+
+To define destinations, use the syntax:
+
+```
+{
+    ...
+    "sap.card": {
+        "configuration": {
+            "destinations": {
+                "<logical name of destination>": {
+                    "name": "<default value to use>"
+                },
+                ...
+            }
+        }
+    }
+    ...
+}
+```
+
+When the company administrator configures the UI Integration Card, the destinations will be mapped to *actual* Cloud Foundry destinations (defined at the sub-account level).
+
+Within the application, you can then resolve the path that the destination is resolved to in code:
+
+```
+        ...
+        this._ownerComponent = this.getOwnerComponent();
+        this._card = this._ownerComponent.card;
+
+        // resolve destinations
+        Promise.all([
+            this._card.resolveDestination("mySFDestination"),
+            this._card.resolveDestination("myJAMDestination"),
+            this._card.resolveDestination("myCMISDestination")
+        ]).then((results) => {
+            // we have resolved destinations
+            this._sfDest = results[0];
+            this._jamDest = results[1];
+            this._cmisDest = results[2];
+            ...
+
+```
+
+Then you can use the resolved URLs to access the necessary destinations.
+
+Parameters can be passed to the application via the `parameters` section:
+
+```
+{
+    ...
+    "sap.card": {
+        "configuration": {
+            "parameters": {
+                "userId": {
+                    "value": "{context>sap.workzone/currentUser/id/value}",
+                    "type": "string",
+                    "label": "User ID"
+                },
+                "userName": {
+                    "value": "{context>sap.workzone/currentUser/name/value}",
+                    "type": "string",
+                    "label": "User Name"
+                },
+
+            }
+        }
+    }
+    ...
+}
+```
+
+In this example, we have two parameters (`userId` and `userName`) which are set to values extracted from a context when the card is rendered in the workplace.  The synatx to extract `context` values is
+
+```
+    {context>sap.workzone/<context object>/<attribute>/value}
+```
+
+Three context objects are available:
+
+1. `currentUser` - with attributes `id`, `name`, `email`
+2. `currentWorkspace` - with attributes `id`, and `name`
+3. `currentCompany` - with attributes `id` and `name`
+
+If you want tro provide additonal parameters, simply add them to the set of parameters using this syntax:
+
+```
+{
+    ...
+    "sap.card": {
+        "configuration": {
+            "parameters": {
+                "<name>": {
+                    "value": "<default value>",
+                    "type": "<type>",
+                    "label": "<label for configuration>"
+                },
+                ...
+            }
+        }
+    }
+    ...
+}
+```
+
+The `label` is used in the configuration screen to identify the parameter.  The `<default value>` is used unless the configuration overrides this.  The `type` can be `string` or `enum`.
+
 ## Component
 
-The application is defined as a normal UI5 component that extends
-sap.ui.core.UIComponent. It determines basic capabilities via the
-manifest.json file.
+The UI5 Application is a straightforward UI5 Component-based application.  It consists of a `Component.js` file, which is used to initialise and configure the application, an XML View (the root of this is defined in `Main.view.xml`), a controller (`Main.controller.js`) and a JSON model.
 
 ## XML View
 
 The application's view is defined using an XML view definitions,
-contained in the file Main.view.xml (the view name is defined in
-manifest.json).
+contained in the file `Main.view.xml` (the view name is defined in
+`manifest.json`).
 
-The top level view is basically a sap.m.Wizard control, with wizard
-steps defined through sap.m.WizardSteps.
+The top level view is basically a `sap.m.Wizard control`, with wizard
+steps defined through `sap.m.WizardSteps`.
 
 Each WizardStep includes sub-steps, each of which is defined in a
 separate 'fragment' named after the sub-step.
@@ -298,7 +418,7 @@ the later section on the UI Layout.
 ## Controller
 
 As usual for XML view-based Components, the application has a
-controller, Main.controller.js. The name of the controller is defined in
+controller, `Main.controller.js`. The name of the controller is defined in
 the Main.view.xml file. The controller is used to handle UI events
 (typically from the UI control buttons), and trigger workflow API calls
 as defined below.
@@ -306,11 +426,11 @@ as defined below.
 ## Model
 
 The model is the context object, as described previously. An initial
-definition of the model is provided in config.js.
+definition of the model is provided in `config.js`.
 
 ## manifest.json
 
-The manifest file (manifest.json) contains the normal definitions used
+The manifest file (`manifest.json`) contains the normal definitions used
 to define overall application capabilities and properties. This includes
 (as a minimum):
 
@@ -506,7 +626,7 @@ progress: progress to the next step is only possible once each main
 the status of each 'step' and enable the wizard to enable the 'next'
 button.
 
-It is important to note that the UI is **[purely data-driven]{.ul}**:
+It is important to note that the UI is **purely data-driven**:
 each 'sub-step' and wizard 'step' is bound to data elements that
 determine its status. The button has bindings that control its
 visibility, enablement and type (emphasized or not). And also, it should
@@ -633,12 +753,12 @@ this UI will be replaced with the starting wizard step.
 This UI component is only displayed when the application detects
 multiple workflow instances that match the query characteristics. If
 this is the case, the UI displays the list of instances, and allows the
-user to select the appropriate one.
+user to select the appropriate one.  The view definitiono for this is delivered in `choose.fragment.xml`.
 
 #### Dismiss
 
 The dismiss UI happens after the workflow is done, and handles the final
-cleanup. It is handled through the fragment dismiss.fragment.xml. The
+cleanup. It is handled through the fragment `dismiss.fragment.xml`. The
 code allows the user to indicate that resources allocated during the
 workflow can be removed.
 
@@ -648,7 +768,7 @@ If the application ends up in an error or other non-active state, the
 appropriate fragment here is used to display the UI. For example, if the
 application ends up in an error state, as indicated by the status
 property having the value ERRONEOUS, we active this XML, as defined in
-the inError.fragment.xml:
+the `inError.fragment.xml`:
 
 ```
 <core:FragmentDefinition xmlns="sap.m"
@@ -704,7 +824,7 @@ A similar approach is taken with the
 
 #### Wizard
 
-This is where the main UI is defined. See wizard.fragment.xml. The
+This is where the main UI is defined. See `wizard.fragment.xml`. The
 wizard is visible if the instance is active and in the RUNNING state.
 
 ```
@@ -894,7 +1014,7 @@ the UI.
 
 ## Top Level Wizard View
 
-The top-level wizard is defined in Main.view.xml, and, as mentioned
+The top-level wizard is defined in `Main.view.xml`, and, as mentioned
 earlier, uses sap.m.Wizard to define basic wizard behavior. The
 following bindings affect this:
 
@@ -1039,7 +1159,7 @@ _terminateWorkflow
 
 These 'wrap' lower level calls that perform the actual API calls to the
 workflow. Currently, the code that implements these lower level calls is
-provided in the file WFDataProvider.js that ships with the app.
+provided in the file `WFDataProvider.js` that ships with the app.
 
 The higher-level calls are designed to be easy to use.
 
@@ -1258,7 +1378,7 @@ Summarising, these are the steps required:
 When a workflow is queried, its context object is used to set the
 application state. If the workflow is waiting for a message (the
 context's application-specific subproperty's readyForMessage is not
-null), then the state-setting function appStatusIsWF<workflow state>
+null), then the state-setting function `appStatusIsWF<workflow state>`
 is called automatically. This allows the application to set any
 additional properties etc. so that the UI can be rendered properly.
 
@@ -1342,7 +1462,7 @@ business ID and status values to locate a matching workflow.
 
 The application expects to send messages to the workflow when it is
 waiting for a message. The application will achieve this through the API
-call _advanceWorkflow -- this sends a message of a particular type to
+call `_advanceWorkflow` -- this sends a message of a particular type to
 the workflow. In order that the application can send the correct
 message, and know that the workflow is waiting for such a message, the
 context object is used as a means of synchronisation.
@@ -1395,7 +1515,7 @@ relevant documents:
 There is a significant issue regarding the handling of errors in the
 workflow itself. If a workflow triggers a call to an external service,
 and the service returns anything other than a 2XX response, the workflow
-will move to an ERRONEOUS state. This is difficult to recover from as
+will move to an `ERRONEOUS` state. This is difficult to recover from as
 the application must somehow determine the cause of the failure (which
 might be technical or business related) and then provide an updated
 context object and then force the workflow to re-execute the failed
