@@ -11,16 +11,16 @@
            backgroundDesign="Transparent"
            binding="{/context/journeyApp}"
            headerText="Dismiss the workflow"
+           class="plwizard"
            visible="{= ${/instance/status} === 'RUNNING' &amp;&amp; (${state} === 'waitForFinalDismiss' || ${state} === 'receivedFinalDismiss')}">
         <VBox class="sapUiResponsiveMargin">
             <Text visible="true"
-                  id="dismissTxt1"
-                  class="sapUiSmallMarginTop successtext"
+                  class="successtext"
                   text="You have successfully completed the workflow." />
             <Text visible="true"
-                  id="dismissTxt0"
-                  class="sapUiSmallMarginTop successtext"
+                  class="sapUiSmallMarginTop"
                   text="{= ${documents}.length === 0 ? 'No documents were uploaded.' : 'The following documents were uploaded.  Select those you would like to permamently delete after this workflow is completed.'}" />
+
             <List visible="{= ${documents}.length === 0 ? false : true}"
                   class="sapUiSmallMarginTop"
                   id="documentsList"
@@ -34,19 +34,19 @@
                     </customData>
                 </StandardListItem>
             </List>
+
             <Text visible="true"
-                  id="dismissTxt2"
                   class="sapUiSmallMarginTop successtext"
                   text="You can now safely dismiss it." />
-            <Button id="completeBtn"
-                    type="Emphasized"
+
+            <Button type="Emphasized"
                     class="sapUiSmallMarginTop"
                     visible="{= ${state} === 'waitForFinalDismiss'}"
                     enabled="{= ${state} === 'waitForFinalDismiss'}"
                     text="Dismiss"
-                    press=".uiEventDismissWorkflow($controller.byId('documentsList'))" />
+                    press="._uiEventDismissWorkflow($controller.byId('documentsList'))" />
+
             <Text visible="{= ${state} === 'receivedFinalDismiss'}"
-                  id="completeTxt"
                   class="sapUiSmallMarginTop successtext"
                   text="Completing and archiving this parental leave workflow ..." />
         </VBox>

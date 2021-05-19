@@ -12,7 +12,7 @@
                 type="Emphasized"
                 visible="true"
                 enabled="true"
-                press=".uiEventStartWorkflow"
+                press="._uiEventStartWorkflow"
                 text="Start the Workflow" />
     </VBox>
 </core:FragmentDefinition>

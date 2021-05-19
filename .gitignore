@@ -4,8 +4,7 @@ dist/
 __contents/
 node_modules/
 package
-package.zip
+*.zip
 businesshub
-businesshub.zip
 package-lock.json
 **/.card/.preview.html

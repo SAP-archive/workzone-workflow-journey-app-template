@@ -10,6 +10,9 @@
     <!-- display start UI -->
     <core:Fragment type="XML" fragmentName="sap.wz.journey.template.card.view.fragments.start" />
 
+    <!-- display choose UI -->
+    <core:Fragment type="XML" fragmentName="sap.wz.journey.template.card.view.fragments.choose" />
+
     <!-- display main wizard UI -->
     <core:Fragment type="XML" fragmentName="sap.wz.journey.template.card.view.fragments.wizard" />
 

@@ -4,11 +4,11 @@
 	"description": "",
 	"private": true,
 	"devDependencies": {
-		"sap-workzone-cpkg-tools": "https://github.com/SAP-samples/workzone-content-package-templates.git",
 		"@sap/ui5-builder-webide-extension": "1.0.9",
 		"@ui5/cli": "^1.14.0",
 		"eslint": "^5.16.0",
-		"rimraf": "^2.6.2"
+		"rimraf": "^2.6.2",
+		"sap-workzone-cpkg-tools": "https://github.com/SAP-samples/workzone-content-package-templates.git"
 	},
 	"scripts": {
 		"build": "node scripts/build.js",
@@ -18,5 +18,9 @@
 		"dependencies": [
 			"@sap/ui5-builder-webide-extension"
 		]
+	},
+	"dependencies": {
+		"to": "^0.2.9",
+		"update": "^0.7.4"
 	}
 }

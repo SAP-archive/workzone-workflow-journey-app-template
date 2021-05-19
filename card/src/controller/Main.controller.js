@@ -93,18 +93,29 @@ sap.ui.define(
                 },
 
                 //=================================================================================//
-                // Hande UI events                                                                 //
+                // Handle UI events                                                                //
+                //                                                                                 //
+                // these event handlers are called when the user clicks on a substep control (e.g. //
+                // a button).  Use them to enable/hide substeps in the current wizard step. Also   //
+                // use them to trigger the workflow to move to a new state.                        //
+                //                                                                                 //
+                // Typically, an event handler either makes some state changes and persists them,  //
+                // or makes state changes and triggers a workflow operation (by advancing it)      //
+                // If the workflow is advanced, then set the sub-step status to inprocess so that  //
+                // the UI can display this to the user.  Eventually the workflow will complete the //
+                // step and the sub-step status will be set accordingly.                           //
+                //                                                                                 //
+                // When the user clicks on the 'Next step' button when a wizard step is complete   //
+                // then a 'cleanup' event handler is called.  This can be used to close/collapse   //
+                // any sub-steps, and ensure sub-steps for the next wizard are made visible.       //
                 //=================================================================================//
 
-                // UI event: start the workflow
-                uiEventStartWorkflow: function () {
-                    this._createWorkflow("receivedConsultation");
-                },
+                //===============//
+                // Wizard Step 1 //
+                //===============//
 
                 // UI event: user tapped signup now
                 uiEventSignUpNow: function () {
-                    // ASSERT: state is correct ...
-
                     this._setContextProperty("consultation/status", "inprocess");
 
                     // advance the workflow and place in state 'receivedConsultation'
@@ -118,6 +129,9 @@ sap.ui.define(
                     fileUploader.readFromFilesystem();
 
                     this._setContextProperty("uploadDocuments/status", "inprocess");
+
+                    // update the workflow to keep track
+                    this._updateWorkflow();
                 },
 
                 // UI Event: read from file system failed
@@ -172,8 +186,6 @@ sap.ui.define(
 
                 // UI event: user requests leave
                 uiEventRequestLeave: function () {
-                    // ASSERT: state is correct ...
-
                     // remember the date we requestsed the leave and set to inprocess
                     this._setContextProperty("leaveRequest/createDate", new Date().toISOString());
                     this._setContextProperty("leaveRequest/approver", this._approver);
@@ -185,38 +197,29 @@ sap.ui.define(
 
                 // UI event: user tapped remind manager
                 uiEventRemindManager: function () {
-                    // ASSERT: state is correct ...
-
                     // note the time we reminded the manager
                     this._setContextProperty("leaveRequest/reminderDate", new Date().toISOString());
 
                     // persist this in the workflow
                     this._updateWorkflow();
-
-                    MessageToast.show("A reminder was sent to your manager");
                 },
 
-                // UI event: user clicked Next on wizard step - move to the next step
-                uiEventWizardStep1Complete: function () {
-                    // ASSERT: state is correct ...
+                //----
 
-                    if (this._getContextProperty("currentStep") >= 1) {
-                        return;
-                    }
-                    // move to the next step
-                    this._setContextProperty("currentStep", 1);
-
+                // UI cleanup event: user clicked Next on wizard step - ensure all sub-steps in this step are closed and
+                // relevant sub-steps in the next setp are visible
+                uiEventCleanupStep1: function () {
+                    // make sub-steps for the next wizard step visible
                     this._setContextProperty("discussLeave/visible", true);
                     this._setContextProperty("healthReminder/visible", true);
-
-                    // persis these changes
-                    this._updateWorkflow();
                 },
+
+                //===============//
+                // Wizard Step 2 //
+                //===============//
 
                 // UI event: user sent leave request discussion details
                 uiEventSetupLeaveDiscussion: function () {
-                    // ASSERT: state is correct ...
-
                     // set to inprocess
                     this._setContextProperty("discussLeave/status", "inprocess");
 
@@ -226,8 +229,6 @@ sap.ui.define(
 
                 // UI event: user tapped health reminder
                 uiEventSetHealthReminder: function () {
-                    // ASSERT: state is correct ...
-
                     // immediately set to done
                     this._setContextProperty("healthReminder/status", "completed");
 
@@ -235,49 +236,42 @@ sap.ui.define(
                     this._updateWorkflow();
                 },
 
-                // UI event: user clicked Next on wizard step - move to the next step
-                uiEventWizardStep2Complete: function () {
-                    // ASSERT: state is correct ...
+                //----
 
-                    if (this._getContextProperty("currentStep") >= 2) {
-                        return;
-                    }
-                    // move to the next step
-                    this._setContextProperty("currentStep", 2);
-
+                // UI cleanup event: user clicked Next on wizard step - ensure all sub-steps in this step are closed and
+                // relevant sub-steps in the next setp are visible
+                uiEventCleanupStep2: function () {
+                    // make sub-steps for the next wizard step visible
                     this._setContextProperty("stayCurrent/visible", true);
                     this._setContextProperty("notifyChanges/visible", true);
-
-                    // persist these changes
-                    this._updateWorkflow();
                 },
 
-                // UI event: user clicked Next on wizard step - move to the next step
-                uiEventWizardStep3Complete: function () {
-                    // ASSERT: state is correct ...
+                //===============//
+                // Wizard Step 3 //
+                //===============//
 
-                    if (this._getContextProperty("currentStep") >= 3) {
-                        return;
-                    }
-                    // move to the next step
-                    this._setContextProperty("currentStep", 3);
+                //----
 
+                // UI cleanup event: user clicked Next on wizard step - ensure all sub-steps in this step are closed and
+                // relevant sub-steps in the next setp are visible
+                uiEventCleanupStep3: function () {
+                    // set all sub-step statuses to complete so they collapse
                     this._setContextProperty("stayCurrent/status", "completed");
                     this._setContextProperty("notifyChanges/status", "completed");
 
+                    // make sub-steps for the next wizard step visible
                     this._setContextProperty("update401/visible", true);
                     this._setContextProperty("updateLife/visible", true);
                     this._setContextProperty("signupDayCare/visible", true);
                     this._setContextProperty("feedback/visible", true);
-
-                    // persist these changes
-                    this._updateWorkflow();
                 },
+
+                //===============//
+                // Wizard Step 4 //
+                //===============//
 
                 // UI event: user tapped feedback
                 uiEventSendFeedback: function () {
-                    // ASSERT: state is correct ...
-
                     // set to inprocess
                     this._setContextProperty("feedback/status", "inprocess");
 
@@ -285,62 +279,23 @@ sap.ui.define(
                     this._advanceWorkflow("receivedFeedback");
                 },
 
-                // UI event: user clicked Final Next (Complete)
-                uiEventWizardStep4Complete: function () {
-                    // ASSERT: state is correct ...
+                //----
 
-                    // collapse the current substeps
+                // UI cleanup event: user clicked Next on wizard step - ensure all sub-steps in this step are closed and
+                // relevant sub-steps in the next setp are visible
+                uiEventCleanupStep4: function () {
+                    // set all sub-step statuses to complete so they collapse
                     this._setContextProperty("update401/status", "completed");
                     this._setContextProperty("updateLife/status", "completed");
                     this._setContextProperty("signupDayCare/status", "completed");
-
-                    // move the workflow forward (no more wizard stepos, just complete)
-                    this._advanceWorkflow("receivedConfirmComplete")
-                },
-
-                // UI event: workflow is dismissed
-                uiEventDismissWorkflow: function (docsList) {
-                    // ASSERT: state is correct ...
-
-                    // we need to work out what documents should be deleted
-                    var docs = docsList.getSelectedItems();
-                    var promises = [];
-                    docs.forEach((docItem) => {
-                        promises.push(DocumentProvider.deleteDocument(this._dpDest, docItem.data("contentId")));
-                    });
-
-                    Promise.all(promises).then((items) => {
-                        if (items.length > 0) {
-                            MessageToast.show("Successfully deleted all the selected documents");
-                        }
-                        // finally push the workflow to closure
-                        this._advanceWorkflow("receivedFinalDismiss");
-                    }).catch((err) => {
-                        MessageToast.show("Failed to delete documents: " + err.message);
-                    });
-                },
-
-                // UI Event: workflow terminated
-                uiEventRestartWorkflow: function () {
-                    // ASSERT: state is correct ...
-
-                    // kill this workflow
-                    this._restartWorkflow();
-                },
-
-                // UI Event: workflow terminated
-                uiEventTerminateWorkflow: function () {
-                    // ASSERT: state is correct ...
-
-                    // kill this workflow
-                    this._terminateWorkflow();
-
-                    // reset
-                    this.appStatusIsWFPreinit();
                 },
 
                 //=================================================================================//
                 // Set app status / reconfigure                                                    //
+                //                                                                                 //
+                // These are called whenever a workflow state changes and are used to reveal any   //
+                // controls if required.  They can also be used to 'validate' a wizard step and    //
+                // reveal the Next Step button.                                                    //
                 //=================================================================================//
 
                 // set app state: Initial state
@@ -542,11 +497,131 @@ sap.ui.define(
                 //=================================================================================//
 
                 //=================================================================================//
+                // Process UI events                                                //
+                //=================================================================================//
+
+                // UI event: start the workflow
+                _uiEventStartWorkflow: function () {
+                    this._createWorkflow("started");
+                },
+
+                // UI event: workflow is dismissed
+                _uiEventDismissWorkflow: function (docsList) {
+                    // ASSERT: state is correct ...
+
+                    // we need to work out what documents should be deleted
+                    var docs = docsList.getSelectedItems();
+                    var promises = [];
+                    docs.forEach((docItem) => {
+                        promises.push(DocumentProvider.deleteDocument(this._dpDest, docItem.data("contentId")));
+                    });
+
+                    Promise.all(promises).then((items) => {
+                        if (items.length > 0) {
+                            MessageToast.show("Successfully deleted all the selected documents");
+                        }
+                        // finally push the workflow to closure
+                        this._advanceWorkflow("receivedFinalDismiss");
+                    }).catch((err) => {
+                        MessageToast.show("Failed to delete documents: " + err.message);
+                    });
+                },
+
+                // UI Event: workflow terminated
+                _uiEventRestartWorkflow: function () {
+                    // ASSERT: state is correct ...
+
+                    // kill this workflow
+                    this._restartWorkflow();
+                },
+
+                // UI Event: workflow terminated
+                _uiEventTerminateWorkflow: function () {
+                    // ASSERT: state is correct ...
+
+                    // kill this workflow
+                    this._terminateWorkflow();
+
+                    // reset
+                    this.appStatusIsWFPreinit();
+                },
+
+                _uiEventSetChosenInstance: function (oEvent) {
+                    var oItem = oEvent.getSource().getSelectedItem();
+                    var id = oItem ? oItem.data("contentId") : null;
+                    this._contextModel.setProperty("/instance/chosen", id);
+                },
+
+                _uiEventChooseInstance: function (oList, terminate) {
+                    var id = this._contextModel.getProperty("/instance/chosen");
+                    var aInstances = this._contextModel.getProperty("/instance/instances");
+                    var oInstanceData = null;
+                    for (var i = 0; i < aInstances.length; i++) {
+                        if (aInstances[i].instance.id === id) {
+                            oInstanceData = aInstances[i];
+                            break;
+                        }
+                    }
+                    if (oInstanceData) {
+                        if (terminate) {
+                            this._terminateWorkflow(id);
+                        } else {
+                            this._onLoadWorkflowInstance(oInstanceData.instance, oInstanceData.context, oInstanceData.executionLogs);
+                        }
+                    } else {
+                        MessageToast.show("Unable to locate the workflow instance.");
+                    }
+                },
+
+                _uiEventWizardStepComplete: function (nStep) {
+                    // ASSERT: state is correct ...
+
+                    if (this._getContextProperty("currentStep") >= nStep) {
+                        return;
+                    }
+                    // move to the next step
+                    this._setContextProperty("currentStep", nStep);
+
+                    // do any clean up for the step
+                    this["uiEventCleanupStep" + nStep]();
+
+                    var wizard = this._view.byId("JourneyAppWizard");
+                    var steps = wizard.getSteps();
+                    if (steps.length == nStep) {
+                        // last step so we are done
+                        this._advanceWorkflow("receivedConfirmComplete");
+                    } else {
+                        // else just persist these changes
+                        this._updateWorkflow();
+                    }
+                },
+
+                //=================================================================================//
                 // Process network or async events                                                 //
                 //=================================================================================//
 
                 // handle load of workflow instance
                 _onLoadWorkflowInstance: function (instance, context, executionLogs) {
+                    if (Array.isArray(instance)) {
+                        // we have an array of instances
+                        var aInstances = instance;
+                        if (aInstances.length == 0) {
+                            instance = null;
+                        } else if (aInstances.length === 1) {
+                            instance = aInstances[0].instance;
+                            context = aInstances[0].context;
+                            executionLogs = aInstances[0].executionLogs;
+                        } else {
+                            // we have an array with multiple elements
+                            this._contextModel.setProperty("/instance", {
+                                status: "CHOOSE",
+                                chosen: null,
+                                instances: aInstances
+                            });
+                            return;
+                        }
+                    }
+
                     this._nextMessage = null;
 
                     // TODO: dismiss busy indicator
@@ -555,6 +630,8 @@ sap.ui.define(
                         this.appStatusIsWFPreinit();
                         return;
                     }
+
+                    instance.instances = instance.instances || [];
 
                     // update existing model directly - dont recreate the model as we
                     // lose the UI bindings
@@ -574,8 +651,9 @@ sap.ui.define(
                             // set the wizard step
                             var wizard = this._view.byId("JourneyAppWizard");
                             var steps = wizard.getSteps();
-                            var wizardStep = steps[appContext.currentStep];
-                            wizard.setCurrentStep(wizardStep);
+                            if (appContext.currentStep < steps.length) {
+                                wizard.setCurrentStep(steps[appContext.currentStep]);
+                            }
 
                             this._nextMessage = appContext.readyForMessage;
 
@@ -675,13 +753,24 @@ sap.ui.define(
                     // Load the running workflow instance (if there is one running)
                     // This returns a new instance and context object
                     // TODO: show busyindicator
-                    WFDataProvider.getSingleContextForBusinessKeyWithCallback(
-                        this._definitionId,                 // definition ID of workflow
-                        this._businessKey,                  // user id it is for
-                        "RUNNING,ERRONEOUS,SUSPENDED",      // status (undefined means any status)
-                        this._onLoadWorkflowInstance.bind(this),
-                        this._onLoadWorkflowInstanceError.bind(this)
-                    )
+                    var instanceId = this._contextModel.getProperty("/instance/id");
+                    if (!instanceId) {
+                        // no instance ... find one
+                        WFDataProvider.getMultipleContextsForBusinessKeyWithCallback(
+                            this._definitionId,                 // definition ID of workflow
+                            this._businessKey,                  // user id it is for
+                            "RUNNING,ERRONEOUS,SUSPENDED",      // status (undefined means any status)
+                            this._onLoadWorkflowInstance.bind(this),
+                            this._onLoadWorkflowInstanceError.bind(this)
+                        );
+                    } else {
+                        // we have an ID, look this up explicitly
+                        WFDataProvider.retrieveWorkflowInstanceWithCallback(
+                            instanceId,
+                            this._onLoadWorkflowInstance.bind(this),
+                            this._onLoadWorkflowInstanceError.bind(this)
+                        );
+                    }
                 },
 
                 _advanceWorkflow: function (state) {
@@ -703,10 +792,8 @@ sap.ui.define(
 
                     // Advance workflow
                     // TODO: show busy indicator
-                    WFDataProvider.advanceWorkflowWithCallback(
-                        this._definitionId,
+                    WFDataProvider.advanceWorkflowInstanceWithCallback(
                         this._nextMessage,
-                        this._businessKey,
                         data.instance.id,
                         data.context[this._appContext],
                         this._onLoadWorkflowInstance.bind(this),
@@ -743,19 +830,19 @@ sap.ui.define(
                     );
                 },
 
-                _restartWorkflow: function () {
+                _restartWorkflow: function (id) {
                     // restart the workflow
                     WFDataProvider.restartWorkflowInstanceWithCallback(
-                        this._contextModel.getProperty("/instance/id"),
+                        id || this._contextModel.getProperty("/instance/id"),
                         this._onLoadWorkflowInstance.bind(this),
                         this._onLoadWorkflowInstanceError.bind(this)
                     );
                 },
 
-                _terminateWorkflow: function () {
+                _terminateWorkflow: function (id) {
                     // cancel the workflow
                     WFDataProvider.cancelWorkflowInstanceWithCallback(
-                        this._contextModel.getProperty("/instance/id"),
+                        id || this._contextModel.getProperty("/instance/id"),
                         this._onLoadWorkflowInstance.bind(this),
                         this._onLoadWorkflowInstanceError.bind(this)
                     );

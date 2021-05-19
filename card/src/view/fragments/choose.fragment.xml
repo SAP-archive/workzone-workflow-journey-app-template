@@ -1,0 +1,54 @@
+<core:FragmentDefinition xmlns="sap.m" 
+                         xmlns:form="sap.ui.layout.form" 
+                         xmlns:l="sap.ui.layout" 
+                         xmlns:core="sap.ui.core" 
+                         xmlns:u="sap.ui.unified" 
+                         xmlns:mvc="sap.ui.core.mvc">
+
+    <Panel id="Choose"
+           expandable="true"
+           expanded="true"
+           width="auto"
+           class="plwizard"
+           backgroundDesign="Transparent"
+           binding="{/instance}"
+           headerText="Choose Workflow Instance"
+           visible="{= ${/instance} !== null &amp;&amp; ${/instance/status} === 'CHOOSE'}">
+        <VBox class="sapUiResponsiveMargin">
+            <Text visible="true"
+                  text="There is more than one workflow instance running. Please choose the appropriate one." />
+
+            <List visible="{= ${instances} !== null &amp;&amp; ${instances}.length === 0 ? false : true}"
+                  class="sapUiSmallMarginTop"
+                  id="instancesList"
+                  items="{instances}"
+                  mode="SingleSelect"
+                  selectionChange="._uiEventSetChosenInstance"
+                  includeItemInSelection="false">
+                <StandardListItem title="{instance/subject}"
+                                  info="Started by {instance/startedBy}"
+                                  description="Started at {instance/startedAt}">
+                    <customData>
+                        <core:CustomData key="contentId"
+                                         value="{instance/id}" />
+                    </customData>
+                </StandardListItem>
+            </List>
+
+            <HBox>
+                <Button type="{= ${chosen} !== null ? 'Emphasized': 'Default'}"
+                        class="sapUiSmallMarginTop"
+                        visible="true"
+                        enabled="{= ${chosen} !== null}"
+                        text="Choose"
+                        press="._uiEventChooseInstance($controller.byId('instancesList'), false)" />
+                <Button type="{= ${chosen} !== null ? 'Negative': 'Default'}"
+                        class="sapUiSmallMarginTop"
+                        visible="true"
+                        enabled="{= ${chosen} !== null}"
+                        text="Terminate"
+                        press="._uiEventChooseInstance($controller.byId('instancesList'), true)" />
+            </HBox>
+        </VBox>
+    </Panel>
+</core:FragmentDefinition>

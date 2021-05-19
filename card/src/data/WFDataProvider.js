@@ -174,7 +174,7 @@ sap.ui.define([], function () {
     }
 
     function retrieveWorkflowInstance(instanceId) {
-        Promise.all([
+        return Promise.all([
             getWorkflowInstance(instanceId),
             getWorkflowInstanceContext(instanceId)
         ]).then((results) => ({
@@ -302,8 +302,7 @@ sap.ui.define([], function () {
 
     function sendWorkflowMessage(
         definitionId,
-        workflowDefinitionId,
-        businessKey,
+        workflowInstanceId,
         data
     ) {
         return getCsrfToken().then((csrfToken) => {
@@ -312,8 +311,7 @@ sap.ui.define([], function () {
                 "POST",
                 {
                     definitionId,
-                    workflowDefinitionId,
-                    businessKey,
+                    workflowInstanceId,
                     context: data || {},
                 },
                 {
@@ -323,11 +321,10 @@ sap.ui.define([], function () {
         });
     }
 
-    function advanceWorkflowInstance(workflowDefinitionId, messageId, businessKey, instanceId, data) {
+    function advanceWorkflowInstance(messageId, instanceId, data) {
         return sendWorkflowMessage(
             messageId,
-            workflowDefinitionId,
-            businessKey,
+            instanceId,
             data
         ).then((instances) => {
             // TODO: verify the instances array contains our instance ID
@@ -351,11 +348,9 @@ sap.ui.define([], function () {
         }))
     }
 
-    function advanceWorkflowInstanceWithCallback(workflowDefinitionId, messageId, businessKey, instanceId, data, callback, error) {
+    function advanceWorkflowInstanceWithCallback(messageId, instanceId, data, callback, error) {
         advanceWorkflowInstance(
-            workflowDefinitionId,
             messageId,
-            businessKey,
             instanceId,
             data
         ).then((result) => {
@@ -573,6 +568,70 @@ sap.ui.define([], function () {
         });
     }
 
+    /**
+     * Locate multiple matching workflow instances that matches the supplied definition ID, business key and status.
+     * Returns a promise that resolves successfully to the array of instances, else rejects with an error.
+     * 
+     * @param  {} definitionId
+     * @param  {} businessKey
+     * @param  {} status
+     */
+    function getMultipleContextsForBusinessKey(definitionId, businessKey, status) {
+        // returns [ { instance, context}, ... ]
+        var query = {
+            definitionId,
+            businessKey,
+            [status && "status"]: status
+        };
+        return getWorkflowInstanceList(
+            query
+        ).then((instances) => {
+            return Promise.all(
+                instances.map((instance) => {
+                    return Promise.all(
+                        [getWorkflowInstanceContext(instance.id), getWorkflowInstanceExecutionLogs(instance.id)]
+                    ).then((results) => {
+                        return {
+                            instance,
+                            "context": results[0],
+                            "executionLogs": results[1]
+                        }
+                    })
+                })
+            );
+        }).then((results) => {
+            console.log("=================== LOADED WORKFLOW INSTANCES ===================");
+
+            return results;
+        });
+    }
+
+    /**
+     * Locate a multiple matching workflow instances that matche the supplied definition ID, business key and status.
+     * If none are found, return null.
+     * Execute callback function on success, else call error handler.
+     * 
+     * @param  {} definitionId
+     * @param  {} businessKey
+     * @param  {} status
+     * @param  {} callback
+     * @param  {} error
+     */
+    function getMultipleContextsForBusinessKeyWithCallback(definitionId, businessKey, status, callback, error) {
+        getMultipleContextsForBusinessKey(
+            definitionId,
+            businessKey,
+            status,
+            callback
+        ).then((results) => {
+            callback(results);
+        }).catch((err) => {
+            // TODO: hide busyindicator
+            console.error(err);
+            error(err);
+        });
+    }
+
     return {
         getWorkflowDefinitionModel: getWorkflowDefinitionModel,
         getFormModel: getFormModel,
@@ -588,6 +647,8 @@ sap.ui.define([], function () {
         //
         sendWorkflowMessage: sendWorkflowMessage,
         //
+        getMultipleContextsForBusinessKey: getMultipleContextsForBusinessKey,
+        getMultipleContextsForBusinessKeyWithCallback: getMultipleContextsForBusinessKeyWithCallback,
         getSingleContextForBusinessKey: getSingleContextForBusinessKey,
         getSingleContextForBusinessKeyWithCallback: getSingleContextForBusinessKeyWithCallback,
         retrieveWorkflowInstance: retrieveWorkflowInstance,

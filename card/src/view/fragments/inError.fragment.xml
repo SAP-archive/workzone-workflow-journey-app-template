@@ -20,13 +20,13 @@
                     type="Emphasized"
                     class="sapUiSmallMarginTop"
                     text="Terminate Workflow"
-                    press=".uiEventTerminateWorkflow"
+                    press="._uiEventTerminateWorkflow"
                     visible="true"/>
             <Button id="RestartWorkflow"
                     type="Emphasized"
                     class="sapUiSmallMarginTop"
                     text="Restart Workflow"
-                    press=".uiEventRestartWorkflow"
+                    press="._uiEventRestartWorkflow"
                     visible="true"/>
         </VBox>
     </Panel>

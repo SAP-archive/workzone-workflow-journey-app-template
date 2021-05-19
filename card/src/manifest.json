@@ -16,7 +16,7 @@
             ]
         },
 		"applicationVersion": {
-			"version": "2.1.0"
+			"version": "2.1.24"
 		},
 		"sourceTemplate": {
 			"id": "ui5template.basicSAPUI5ApplicationProject",
