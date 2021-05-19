@@ -1054,12 +1054,24 @@ the sub-step context section.
 
 The panel follows this pattern:
 
--   Visibility:
+-   *Expanded*: whether the panel is expanded or not is determined by the sub-step status:
+    ```
+    expanded="{= ${status} !== 'completed'}" 
+    ```
+
+-   *Overflow Toolbar*: this contains a title for the sub-step, and icons that summarise the state of the sub-step.  There are icons for each possible status:
+
+    ```
+	<Title text="{i18n>STEPS_APPLYFORLEAVE_STEPS_CONSULTATION_TITLE}" />
+	<core:Icon src="sap-icon://complete" class="size1" visible="{= ${status} === 'completed'}"/>
+	<core:Icon src="sap-icon://accept" class="size1" visible="{= ${status} === 'inprocess'}"/>
+	<core:Icon src="sap-icon://user-edit" class="size1" visible="{= ${status} === 'open'}"/>
+	<core:Icon src="sap-icon://error" class="size1" visible="{= ${status} === 'error'}"/>
+    ```
 
 The (optional) button follows this pattern:
 
--   *Visibility*: the visible property is determined by the model's
-    status property:
+-   *Visibility*: the visible property is determined by the sub-step's status property:
     ```
     visible="{= ${**status**} === 'open' || ${**status**} === 'error'}"
     ```
@@ -1083,7 +1095,10 @@ The (optional) button follows this pattern:
 
 -   *Event*: there should be a UI event handler for each button that
     will be called when the button is pressed. The UI Event handler will
-    be called when the button is pressed. The application
+    be called when the button is pressed:
+    ```
+    press=".uiEventSignUpNow"
+    ```
 
 # Controller Event Handling
 
@@ -1091,7 +1106,11 @@ The View is managed through a Controller. This is responsible for
 handling the UI events, and processing workflow state changes, and
 ensuring that the model is updated properly.
 
-The following controller handlers are defined:
+Some of the controllers are designed to be implemented to suit the use case; others are 'standard' event handlers, which use boiler plate code to process events in a sstandardised way, and shoul dnot need to be modified.
+
+## Standard Controller Event Handlers
+
+The 'standard' following controller handlers are defined:
 
 #### onInit
 
@@ -1100,43 +1119,46 @@ page is navigated to, or the user refreshes the browser page etc.). It
 is responsible for calling the workflow APIs to determine the current
 state of the workflow.
 
-#### uiEventXXX
+##### _uiEventStartWorkflow
 
-Each UI event is handled through a matching event handler. Every time a
-button is clicked, this calls the matching handler; every time a wizard
-'next step' button is clicked, again we call a matching event handler.
-We can further divide the UI events into these categories:
+Called when we initiate the workflow (when there is no instance running).
 
-##### uiEventStartWorkflow
-
-Called when we initiate the workflow (when there is no instance
-running).
-
-##### uiEventRestartWorkflow
+##### _uiEventRestartWorkflow
 
 Used to restart the workflow.
 
-##### uiEventDismissWorkflow
+##### _uiEventDismissWorkflow
 
-Used to clean up at the end and dismiss the UI and remove any artefacts
-etc.
+Used to clean up at the end and dismiss the UI and remove any artefacts etc.
 
-##### uiEventTerminateWorkflow
+##### _uiEventTerminateWorkflow
 
 Used to terminate a workflow (not used in the example).
 
-##### uiEventWizardStepNComplete
+##### _uiEventChooseInstance
+
+Called when a number of matching workflow instances are available.
+
+##### _uiEventWizardStepComplete
 
 Called whenever a wizard main step is complete.
 
+## Use-case specific event handlers
+
+These are provided by the template developer to suit the use case, and take the form:
+
 #### uiEventXXX
 
-Any other events are called when a sub-step button is clicked.
+Each UI event is handled through a matching event handler. Every time a
+button is clicked, this calls the matching handler.
 
-#### appStatusXXX
+#### uiEventCleanupStep<N>
 
-These functions are called when the workflow instance context is
-queried, and its status is returned.
+This is called whenever a main step event handler is clicked, and provides an opportunity for the developer to add any cleanup/setup code required.  This might involve setting sub-step statuses to 'complete' for example, or making sub-steps in the next wizard step to be visible.
+
+#### appStatus<XXX>
+
+When a workflow instance is loaded, an 'app status' event handler is called that allows the developer to perform any reuired setup (for example, making any sub-steps visible).  The actual name of the handler is determined by the status value returned by the workflow, via the `/context/<app name>/status` property value.
 
 # Workflow API Calls
 
