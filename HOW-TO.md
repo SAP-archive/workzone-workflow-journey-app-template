@@ -77,7 +77,20 @@ The final zip file can then be uploaded in workzone via the UI Ibtegration card 
 
 # How to Determine the Basic Structure
 
-xxx
+When creating an aplication and workflow pairing, these are the main things to consider:
+
+1. The workflow will use a number of intermediate message event points to synchronise
+
+    When the UI application queries the workflow, it should return a context object that indicates what the current intermediate message event point is.  This allows the UI to sync itself to that point.  If the workflow is performing some long running operation or operations, then it might not be at an intermediate message event point; in which ase, the UI application will poll it until it does.
+
+    Split the workflow into groups of actions, separated by intermediate message event points.  Each intermediate event point is used to propvide new context to the workflow.
+
+2. Typically, the UI application will either send a message to the workflow (calling `_advanceWorkflow`) - in which case the workflow moves to the next intermediate message event point - or the UI application just saves the latest version of the context object against the workflow (calling `_updateWorkflow`).
+
+    When the workflow is at an intermediate evenet point, the app status handler for this point is called, allowing the code to set any state that is appropriate.
+
+3. When a wizard step is completed, a cleanup event handler will be called that allows the application to cleanup or or set any state that is required.
+
 
 # How to Modify the workflow with no difference to the sync points
 
