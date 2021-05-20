@@ -5,13 +5,15 @@ Chris Jobson
 
 ## Table of Contents
 
-[How to Build and Deploy the Application and Workflow](#build-and-deploy)
+[How to Build and Deploy the Application and Workflow](#how-to-build-and-deploy-the-application-and-workflow)
 
-[How to Modify the workflow with no difference to the sync points](#modify-the-workflow-with-no-difference-to-the-sync-points)
+[How to Determine the Basic Structure](#how-to-determine-the-basic-structure)
 
-[How to Modify the application UI with no difference to the sync points](#modify-the-application-ui-with-no-difference-to-the-sync-points)
+[How to Modify the workflow with no difference to the sync points](#how-tomodify-the-workflow-with-no-difference-to-the-sync-points)
 
-[How to Add new sync points](#add-new-sync-points)
+[How to Modify the application UI with no difference to the sync points](#how-to-modify-the-application-ui-with-no-difference-to-the-sync-points)
+
+[How to Add new sync points](#how-to-add-new-sync-points)
 
 # How to Build and Deploy the Application and Workflow
 
@@ -73,7 +75,11 @@ zip -r application.zip dist
 
 The final zip file can then be uploaded in workzone via the UI Ibtegration card uploader.
 
-# How to Modify the **workflow** with no difference to the sync points
+# How to Determine the Basic Structure
+
+xxx
+
+# How to Modify the workflow with no difference to the sync points
 
 The underlying workflow can be adjusted easily if there are no changes
 to the sync points. In this case, simply add extra steps in the
@@ -98,7 +104,7 @@ The main thing to note is that when adding additional workflow steps,
 provided the Intermediate Message event points are untouched, you can
 add as many extra steps as you want.
 
-# How to Modify the **application UI** with no difference to the sync points
+# How to Modify the application UI with no difference to the sync points
 
 Leaving the sync points alone means that the application and workflow
 can be independently modified but still work together. Effectively the

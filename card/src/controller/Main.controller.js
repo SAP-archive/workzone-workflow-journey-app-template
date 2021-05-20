@@ -98,9 +98,9 @@ sap.ui.define(
                 },
 
                 //=================================================================================//
-                // Handle UI events                                                                //
+                // Handle UI events and set app state                                              //
                 //                                                                                 //
-                // these event handlers are called when the user clicks on a substep control (e.g. //
+                // These event handlers are called when the user clicks on a substep control (e.g. //
                 // a button).  Use them to enable/hide substeps in the current wizard step. Also   //
                 // use them to trigger the workflow to move to a new state.                        //
                 //                                                                                 //
@@ -108,16 +108,47 @@ sap.ui.define(
                 // or makes state changes and triggers a workflow operation (by advancing it)      //
                 // If the workflow is advanced, then set the sub-step status to inprocess so that  //
                 // the UI can display this to the user.  Eventually the workflow will complete the //
-                // step and the sub-step status will be set accordingly.                           //
+                // step and the sub-step status will be set accordingly.  When this happens an     //
+                // appStatusIsWF<XXX> event handler is called - this is used to update any local   //
+                // state to reflect the current workflow state                                     //
                 //                                                                                 //
                 // When the user clicks on the 'Next step' button when a wizard step is complete   //
-                // then a 'cleanup' event handler is called.  This can be used to close/collapse   //
-                // any sub-steps, and ensure sub-steps for the next wizard are made visible.       //
+                // then a uiEventCleanupStep<n> event handler is called.  This can be used to      //
+                // close/collapse any sub-steps, and ensure sub-steps for the next wizard are made //
+                // visible.                                                                        //
                 //=================================================================================//
 
-                //===============//
-                // Wizard Step 1 //
-                //===============//
+                // set app state: Initial state
+                appStatusIsWFPreinit: function () {
+                    // re-create context object
+                    var data = config.createContext(
+                        this._definitionId,
+                        this._businessKey,
+                        this._userDetails,
+                        this._documentProvider,
+                        this._dpDest,
+                        this._workspaceName
+                    );
+
+                    this._contextModel.setProperty("/context", data.context);
+                    this._contextModel.setProperty("/instance", data.instance);
+                    this._contextModel.setProperty("/executionLogs", null);
+
+                    var wizard = this._view.byId("JourneyAppWizard");
+                    wizard.setCurrentStep(wizard.getSteps()[0]);
+                    wizard.setShowNextButton(true);
+
+                    this._setContextProperty("consultation/visible", true);
+                },
+
+                //====================//
+                // Wizard Step 1      //
+                //====================//
+
+                // App status handler called when workflow initialises itself
+                appStatusIsWFWaitForConsultation: function () {
+                    this._setContextProperty("consultation/visible", true);
+                },
 
                 // UI event: user tapped signup now
                 uiEventSignUpNow: function () {
@@ -125,6 +156,10 @@ sap.ui.define(
 
                     // advance the workflow and place in state 'receivedConsultation'
                     this._advanceWorkflow("receivedConsultation");
+                },
+
+                appStatusIsWFWaitForLeaveRequest: function () {
+                    this._setContextProperty("uploadDocuments/visible", true);
                 },
 
                 // UI Event: user tapped upload document
@@ -190,6 +225,10 @@ sap.ui.define(
                 },
 
                 // UI event: user requests leave
+                //
+                // ------------------------------------------
+                // ------------------------------------------
+                // VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
                 uiEventRequestLeave: function () {
                     // remember the date we requestsed the leave and set to inprocess
                     this._setContextProperty("leaveRequest/createDate", new Date().toISOString());
@@ -200,6 +239,14 @@ sap.ui.define(
                     this._advanceWorkflow("receivedLeaveRequest");
                 },
 
+                appStatusIsWFWaitForManagerDiscussionRequest: function () {
+                    // mark this wizard step as validated - this enables the StepN Button to be displayed
+                    this._setContextProperty("stepValidated", 1);
+                },
+                // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                // ------------------------------------------
+                // ------------------------------------------
+
                 // UI event: user tapped remind manager
                 uiEventRemindManager: function () {
                     // note the time we reminded the manager
@@ -209,8 +256,6 @@ sap.ui.define(
                     this._updateWorkflow();
                 },
 
-                //----
-
                 // UI cleanup event: user clicked Next on wizard step - ensure all sub-steps in this step are closed and
                 // relevant sub-steps in the next setp are visible
                 uiEventCleanupStep1: function () {
@@ -219,11 +264,15 @@ sap.ui.define(
                     this._setContextProperty("healthReminder/visible", true);
                 },
 
-                //===============//
-                // Wizard Step 2 //
-                //===============//
+                //====================//
+                // Wizard Step 2      //
+                //====================//
 
                 // UI event: user sent leave request discussion details
+                //
+                // ------------------------------------------
+                // ------------------------------------------
+                // VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
                 uiEventSetupLeaveDiscussion: function () {
                     // set to inprocess
                     this._setContextProperty("discussLeave/status", "inprocess");
@@ -232,6 +281,14 @@ sap.ui.define(
                     this._advanceWorkflow("receivedManagerDiscussionMeetingRequest");
                 },
 
+                appStatusIsWFWaitForFeedback: function () {
+                    // mark this wizard step as validated - this enables the StepN Button to be displayed
+                    this._setContextProperty("stepValidated", 2);
+                },
+                // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                // ------------------------------------------
+                // ------------------------------------------
+                
                 // UI event: user tapped health reminder
                 uiEventSetHealthReminder: function () {
                     // immediately set to done
@@ -241,21 +298,20 @@ sap.ui.define(
                     this._updateWorkflow();
                 },
 
-                //----
-
                 // UI cleanup event: user clicked Next on wizard step - ensure all sub-steps in this step are closed and
                 // relevant sub-steps in the next setp are visible
                 uiEventCleanupStep2: function () {
                     // make sub-steps for the next wizard step visible
                     this._setContextProperty("stayCurrent/visible", true);
                     this._setContextProperty("notifyChanges/visible", true);
+
+                    // mark all of sub-steps in the next wizard step as validated
+                    this._setContextProperty("stepValidated", 3);
                 },
 
-                //===============//
-                // Wizard Step 3 //
-                //===============//
-
-                //----
+                //====================//
+                // Wizard Step 3      //
+                //====================//
 
                 // UI cleanup event: user clicked Next on wizard step - ensure all sub-steps in this step are closed and
                 // relevant sub-steps in the next setp are visible
@@ -271,11 +327,15 @@ sap.ui.define(
                     this._setContextProperty("feedback/visible", true);
                 },
 
-                //===============//
-                // Wizard Step 4 //
-                //===============//
+                //====================//
+                // Wizard Step 4      //
+                //====================//
 
                 // UI event: user tapped feedback
+                //
+                // ------------------------------------------
+                // ------------------------------------------
+                // VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
                 uiEventSendFeedback: function () {
                     // set to inprocess
                     this._setContextProperty("feedback/status", "inprocess");
@@ -284,7 +344,12 @@ sap.ui.define(
                     this._advanceWorkflow("receivedFeedback");
                 },
 
-                //----
+                appStatusIsWFWaitForConfirmComplete: function () {
+                    this._setContextProperty("stepValidated", 4);
+                },
+                // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                // ------------------------------------------
+                // ------------------------------------------
 
                 // UI cleanup event: user clicked Next on wizard step - ensure all sub-steps in this step are closed and
                 // relevant sub-steps in the next setp are visible
@@ -296,82 +361,13 @@ sap.ui.define(
                 },
 
                 //=================================================================================//
-                // Set app status / reconfigure                                                    //
-                //                                                                                 //
-                // These are called whenever a workflow state changes and are used to reveal any   //
-                // controls if required.  They can also be used to 'validate' a wizard step and    //
-                // reveal the Next Step button.                                                    //
-                //=================================================================================//
-
-                // set app state: Initial state
-                appStatusIsWFPreinit: function () {
-                    // re-create context object
-                    var data = config.createContext(
-                        this._definitionId,
-                        this._businessKey,
-                        this._userDetails,
-                        this._documentProvider,
-                        this._dpDest,
-                        this._workspaceName
-                    );
-
-                    this._contextModel.setProperty("/context", data.context);
-                    this._contextModel.setProperty("/instance", data.instance);
-                    this._contextModel.setProperty("/executionLogs", null);
-
-                    var wizard = this._view.byId("JourneyAppWizard");
-                    wizard.setCurrentStep(wizard.getSteps()[0]);
-                    wizard.setShowNextButton(true);
-
-                    this._setContextProperty("consultation/visible", true);
-                },
-
-                appStatusIsWFWaitForConsultation: function () {
-                    this._setContextProperty("consultation/visible", true);
-                },
-
-                // set app state: we are ready to upload docs
-                appStatusIsWFWaitForLeaveRequest: function () {
-                    this._setContextProperty("uploadDocuments/visible", true);
-                },
-
-                appStatusIsWFWaitForManagerDiscussionRequest: function () {
-                    this._setContextProperty("stepValidated", 1);
-                },
-
-                appStatusIsWFWaitForFeedback: function () {
-                    this._setContextProperty("stepValidated", 3);
-                },
-                
-                appStatusIsWFWaitForCloseCompleteAfterLeaveRejected: function () {
-                },
-
-                appStatusIsWFWaitForConfirmComplete: function () {
-                    this._setContextProperty("stepValidated", 4);
-                },
-
-                appStatusIsWFWaitForFinalDismiss: function () {
-                    // disable the next button
-                    var wizard = this._view.byId("JourneyAppWizard");
-                    wizard.setShowNextButton(false);
-                },
-
-                // set app state: in error
-                appStatusIsWFInError: function () {
-                },
-
-                // set app state: is suspended
-                appStatusIsWFSuspended: function () {
-                },
-
-                //=================================================================================//
                 //=================================================================================//
                 //              *** NO NEED TO CHANGE ANYTHING BELOW HERE ***                      //
                 //=================================================================================//
                 //=================================================================================//
 
                 //=================================================================================//
-                // Process UI events                                                //
+                // Process UI events                                                               //
                 //=================================================================================//
 
                 // UI event: start the workflow
@@ -539,17 +535,19 @@ sap.ui.define(
                                 // on the next refresh
                                 setTimeout(this._queryWorkflow.bind(this), 5000);
                             } else {
-                                // determione the app status update function to call
+                                // determine the app status update function to call
                                 var wfState = appContext.state;
-                                var appStatusFn = "appStatusIsWF" + wfState.charAt(0).toUpperCase() + wfState.slice(1);
+                                if (wfState !== "waitForFinalDismiss" && wfState === "receivedFinalDismiss") {
+                                    var appStatusFn = "appStatusIsWF" + wfState.charAt(0).toUpperCase() + wfState.slice(1);
 
-                                if (typeof this[appStatusFn] !== "function") {
-                                    console.error("State does not map to a function");
-                                    return;
+                                    if (typeof this[appStatusFn] !== "function") {
+                                        console.error("State does not map to a function");
+                                        return;
+                                    }
+
+                                    // call app status function
+                                    this[appStatusFn]();
                                 }
-
-                                // call app status function
-                                this[appStatusFn]();
                             }
                             break;
 
@@ -563,7 +561,6 @@ sap.ui.define(
                             break;
 
                         case "SUSPENDED":
-                            this.appStatusIsWFSuspended();
                             break;
 
                         case "ERRONEOUS":
@@ -571,7 +568,6 @@ sap.ui.define(
                             var lastError = executionLogs.length > 0 ? executionLogs[executionLogs.length - 1].error.message : "The workflow is in error";
                             this._contextModel.setProperty("/instance/lastErrorMessage", lastError);
 
-                            this.appStatusIsWFInError();
                             break;
 
                         default:

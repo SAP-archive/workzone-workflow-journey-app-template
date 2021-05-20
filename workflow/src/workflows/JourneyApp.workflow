@@ -41,7 +41,7 @@
 		"3b2b8e88-bb80-4736-ab71-14321924ade3": {
 			"classDefinition": "com.sap.bpm.wfs.SequenceFlow",
 			"id": "sequenceflow54",
-			"name": "Leave Request OK",
+			"name": "Leave Request Message OK",
 			"sourceRef": "3963a686-f8dc-4eed-b0cf-71e158841664",
 			"targetRef": "a69f47f3-d148-4854-a66d-b1230e4bc887"
 		},
@@ -73,7 +73,7 @@
 		},
 		"8b7d70aa-a814-4fde-abe6-8a79bd44ebd9": {
 			"classDefinition": "com.sap.bpm.wfs.ui.SequenceFlowSymbol",
-			"points": "1225.9999964237213,356 1320,356 1320,213 535,213 535,76 615.9999952316284,76.00000029802322",
+			"points": "1193.9999964237213,299 1193.9999964237213,266 515.5,266 515.5,76 615.9999952316284,76.00000029802322",
 			"sourceSymbol": "617da9a6-5267-4e0e-8ff9-457962df7290",
 			"targetSymbol": "9873f7ad-940c-4375-bcfc-c92a718d2603",
 			"object": "3b2b8e88-bb80-4736-ab71-14321924ade3"
@@ -98,8 +98,8 @@
 		},
 		"617da9a6-5267-4e0e-8ff9-457962df7290": {
 			"classDefinition": "com.sap.bpm.wfs.ui.ExclusiveGatewaySymbol",
-			"x": 1204.9999964237213,
-			"y": 335,
+			"x": 1172.9999964237213,
+			"y": 278,
 			"object": "3963a686-f8dc-4eed-b0cf-71e158841664"
 		},
 		"13b89e31-0ea2-418b-b7bc-9529eb710a35": {
@@ -131,8 +131,8 @@
 		},
 		"1add2129-5a0d-4d29-b016-2fd23c34eba5": {
 			"classDefinition": "com.sap.bpm.wfs.ui.IntermediateCatchEventSymbol",
-			"x": 859.9999940395355,
-			"y": 326.0000002980232,
+			"x": 853.9999940395355,
+			"y": 387.0000002980232,
 			"width": 32,
 			"height": 32,
 			"object": "768d2160-68cb-4095-989a-7b3cd5152043"
@@ -217,22 +217,22 @@
 		},
 		"a5b74ef0-93d2-441c-a281-28156bbb222d": {
 			"classDefinition": "com.sap.bpm.wfs.ui.SequenceFlowSymbol",
-			"points": "891.9999940395355,342.0000002980232 921,342 921,334 949.9999928474426,334",
+			"points": "885.9999940395355,403.0000002980232 932.5,403 932.5,424 978.9999928474426,424",
 			"sourceSymbol": "1add2129-5a0d-4d29-b016-2fd23c34eba5",
 			"targetSymbol": "bd5f0594-e831-4b21-bb18-efb23cf0cfcf",
 			"object": "c6dee3e0-3c1f-4153-a7b1-852bc8e2f3a7"
 		},
 		"bd5f0594-e831-4b21-bb18-efb23cf0cfcf": {
 			"classDefinition": "com.sap.bpm.wfs.ui.ScriptTaskSymbol",
-			"x": 949.9999928474426,
-			"y": 314,
+			"x": 978.9999928474426,
+			"y": 404,
 			"width": 100,
 			"height": 60,
 			"object": "13b89e31-0ea2-418b-b7bc-9529eb710a35"
 		},
 		"a70ac3bf-2c9f-4b98-a467-8c8f0e8e66ea": {
 			"classDefinition": "com.sap.bpm.wfs.ui.SequenceFlowSymbol",
-			"points": "949.9999928474426,356 1246.9999964237213,356",
+			"points": "978.9999928474426,446 1265,446 1265,299 1214.9999964237213,299",
 			"sourceSymbol": "bd5f0594-e831-4b21-bb18-efb23cf0cfcf",
 			"targetSymbol": "617da9a6-5267-4e0e-8ff9-457962df7290",
 			"object": "fd7f5cf8-6289-43a0-aa19-6ae79168854c"
@@ -257,12 +257,12 @@
 			"x": 685.9999952316284,
 			"y": 307.0000002980232,
 			"width": 100,
-			"height": 60,
+			"height": 80,
 			"object": "bd351301-b0e8-444d-b7f3-bc084cbddf0c"
 		},
 		"d21e387d-65b3-4389-8b05-1368f30f9df1": {
 			"classDefinition": "com.sap.bpm.wfs.ui.SequenceFlowSymbol",
-			"points": "785.999995279632,342.99998474121094 823.2500000480036,342.9999844431877 823.25,342 859.9999940395355,342.0000002980232",
+			"points": "786,355 820.25,355 820.25,403 853.9999940395355,403.0000002980232",
 			"sourceSymbol": "f845f7eb-487d-48cc-ad41-fbcf0639ae19",
 			"targetSymbol": "1add2129-5a0d-4d29-b016-2fd23c34eba5",
 			"object": "3bd3f30d-72cb-47c2-8cc9-27121cccaa57"
@@ -285,7 +285,7 @@
 		},
 		"0c1151d0-31dd-43ea-9edf-5724e4dd4a4d": {
 			"classDefinition": "com.sap.bpm.wfs.ui.SequenceFlowSymbol",
-			"points": "615.9999964237213,340.5000001490116 685.9999952316284,340.5000001490116",
+			"points": "615.9999964237213,340.5000001490116 651.25,340.5 651.25,351.6666564941406 686,351.6666564941406",
 			"sourceSymbol": "bd6af2cb-f03f-46a5-a0f9-c68e7f4de38b",
 			"targetSymbol": "f845f7eb-487d-48cc-ad41-fbcf0639ae19",
 			"object": "fa8cae11-886f-4092-9bb8-933a39210ed6"
@@ -397,7 +397,7 @@
 		},
 		"17d26c1a-c6c1-417b-aa7b-931180232a44": {
 			"classDefinition": "com.sap.bpm.wfs.ui.SequenceFlowSymbol",
-			"points": "1229,356 1229,256.5 737,256.5 737,337",
+			"points": "1197,299 979.5,299 979.5,347 737,347",
 			"sourceSymbol": "617da9a6-5267-4e0e-8ff9-457962df7290",
 			"targetSymbol": "f845f7eb-487d-48cc-ad41-fbcf0639ae19",
 			"object": "4fdee93b-83c2-49c7-addc-0638631a6a9e"
@@ -543,27 +543,27 @@
 		},
 		"c68f6f47-e96d-4750-92aa-6ce44294358b": {
 			"classDefinition": "com.sap.bpm.wfs.ui.ExclusiveGatewaySymbol",
-			"x": 937,
-			"y": -93,
+			"x": 1013,
+			"y": 148,
 			"object": "419e1c62-3428-4fdf-bdbb-7bff06644880"
 		},
 		"240422d2-800c-4c57-a384-800ab972a91e": {
 			"classDefinition": "com.sap.bpm.wfs.ui.SequenceFlowSymbol",
-			"points": "941,72 941,-5.75 958,-5.75 958,-72",
+			"points": "941,71 941,124.25 1034,124.25 1034,170",
 			"sourceSymbol": "019d9eeb-b5e0-410f-a725-cb452b7b4176",
 			"targetSymbol": "c68f6f47-e96d-4750-92aa-6ce44294358b",
 			"object": "a6727916-d76a-41b8-8251-a14b3998163d"
 		},
 		"63c36a4d-e874-4db0-b9a0-45d2ca46bf17": {
 			"classDefinition": "com.sap.bpm.wfs.ui.SequenceFlowSymbol",
-			"points": "958,-74 1092,-74 1092,73",
+			"points": "1034,169.5 1034,124 1092,124 1092,70.5",
 			"sourceSymbol": "c68f6f47-e96d-4750-92aa-6ce44294358b",
 			"targetSymbol": "80aa76c2-8364-4bb7-ba83-a16bc08bd9c3",
 			"object": "5a62c131-6f4c-4214-8911-0411d0e8bc65"
 		},
 		"bb669d04-2635-4322-88c8-d4fb1c9bc2a0": {
 			"classDefinition": "com.sap.bpm.wfs.ui.SequenceFlowSymbol",
-			"points": "958,-72 958,-154 768,-154 767.9999952316284,307.5000002980232",
+			"points": "1034,169 899.5,169 899.5,307.6666564941406 768,307.6666564941406",
 			"sourceSymbol": "c68f6f47-e96d-4750-92aa-6ce44294358b",
 			"targetSymbol": "f845f7eb-487d-48cc-ad41-fbcf0639ae19",
 			"object": "d66cdf78-0d01-442d-9bad-987e7e4b90f7"
@@ -671,7 +671,7 @@
 					"name": "Wait for Final Dismiss"
 				},
 				"1519ff56-9dbd-4de6-9e5e-303f0455a218": {
-					"name": "Wait for Due Date"
+					"name": "Wait for Consultation"
 				},
 				"e32b8d68-cefa-4223-9796-6fc1c14e8445": {
 					"name": "Wait for Feedback"
@@ -697,13 +697,13 @@
 					"name": "Prepare Leave Request"
 				},
 				"3963a686-f8dc-4eed-b0cf-71e158841664": {
-					"name": "Leave Request in Error?"
+					"name": "Leave Request Message in Error?"
 				},
 				"bd351301-b0e8-444d-b7f3-bc084cbddf0c": {
-					"name": "Setup For Wait for Leave Request"
+					"name": "Prepare For Wait for Leave Request"
 				},
 				"1a993072-c45a-4829-91fe-2c60f7e0a35c": {
-					"name": "Validate SF Response"
+					"name": "Validate Leave Request Decision"
 				},
 				"162df8a4-bb11-4f61-893d-4dd2685f59b5": {
 					"name": "Prepare for SNOW"
@@ -712,7 +712,7 @@
 					"name": "Prepare for Manager Discussion"
 				},
 				"d2977543-6a90-4663-a57e-73e46abf8443": {
-					"name": "Confirm Manager Discussion Details"
+					"name": "Validate Manager Discussion Details"
 				},
 				"b432b4ce-4382-4a1e-9cd3-d26a56c94599": {
 					"name": "Prepare For Confirm Workflow Complete"
@@ -724,7 +724,7 @@
 					"name": "Check due date"
 				},
 				"b429a4c9-f764-40b2-9b80-ab43dc2de597": {
-					"name": "Prepare for Wait for Due Date"
+					"name": "Prepare for Wait for Consultation"
 				},
 				"35e782c0-aee0-4b56-9e80-1597e41eaaef": {
 					"name": "Prepare for Feedback Upload"
@@ -736,21 +736,21 @@
 					"name": "Approve Leave Request"
 				},
 				"419e1c62-3428-4fdf-bdbb-7bff06644880": {
-					"name": "ExclusiveGateway6"
+					"name": "Leave Request Appoved?"
 				},
 				"16293c7d-f125-4f4d-9d40-75d22048e32b": {
 					"name": "Confirm Meeting Request"
 				},
 				"27e3e693-e7e7-48d2-8497-a05f70a881c5": {
-					"name": "CheckMeetingRequestDecision"
+					"name": "Validate Manager Decision"
 				},
 				"90bf4bfb-5e3a-4a98-8ebb-9e2d45dc3bee": {
-					"name": "ExclusiveGateway7"
+					"name": "Manager Approval?"
 				}
 			},
 			"sequenceFlows": {
 				"3b2b8e88-bb80-4736-ab71-14321924ade3": {
-					"name": "Leave Request OK"
+					"name": "Leave Request Message OK"
 				},
 				"fd7f5cf8-6289-43a0-aa19-6ae79168854c": {
 					"name": "SequenceFlow30"
@@ -828,10 +828,10 @@
 					"name": "SequenceFlow121"
 				},
 				"5a62c131-6f4c-4214-8911-0411d0e8bc65": {
-					"name": "SequenceFlow122"
+					"name": "Leave Request Approved"
 				},
 				"d66cdf78-0d01-442d-9bad-987e7e4b90f7": {
-					"name": "SequenceFlow123"
+					"name": "Leave Request Rejected"
 				},
 				"7ff328ab-97f6-4473-9450-c6a9ba4dadaf": {
 					"name": "SequenceFlow124"
@@ -846,7 +846,7 @@
 					"name": "SequenceFlow127"
 				},
 				"d45e71ec-58bd-4a27-91de-f54d66baf677": {
-					"name": "SequenceFlow128"
+					"name": "manager OK"
 				},
 				"68017fce-3ce1-4a7b-aecf-c8b392fa4459": {
 					"name": "SequenceFlow129"
@@ -896,7 +896,7 @@
 		"1519ff56-9dbd-4de6-9e5e-303f0455a218": {
 			"classDefinition": "com.sap.bpm.wfs.IntermediateCatchEvent",
 			"id": "intermediatemessageevent15",
-			"name": "Wait for Due Date",
+			"name": "Wait for Consultation",
 			"eventDefinitions": {
 				"83f9e042-bfd4-4c32-9011-471c5bc5e4b6": {}
 			}
@@ -917,20 +917,20 @@
 		"3963a686-f8dc-4eed-b0cf-71e158841664": {
 			"classDefinition": "com.sap.bpm.wfs.ExclusiveGateway",
 			"id": "exclusivegateway4",
-			"name": "Leave Request in Error?",
+			"name": "Leave Request Message in Error?",
 			"default": "3b2b8e88-bb80-4736-ab71-14321924ade3"
 		},
 		"bd351301-b0e8-444d-b7f3-bc084cbddf0c": {
 			"classDefinition": "com.sap.bpm.wfs.ScriptTask",
 			"reference": "/scripts/JourneyApp/SetupForWait.js",
 			"id": "scripttask10",
-			"name": "Setup For Wait for Leave Request"
+			"name": "Prepare For Wait for Leave Request"
 		},
 		"1a993072-c45a-4829-91fe-2c60f7e0a35c": {
 			"classDefinition": "com.sap.bpm.wfs.ScriptTask",
 			"reference": "/scripts/JourneyApp/SetupForWait3.js",
 			"id": "scripttask12",
-			"name": "Validate SF Response"
+			"name": "Validate Leave Request Decision"
 		},
 		"162df8a4-bb11-4f61-893d-4dd2685f59b5": {
 			"classDefinition": "com.sap.bpm.wfs.ScriptTask",
@@ -948,7 +948,7 @@
 			"classDefinition": "com.sap.bpm.wfs.ScriptTask",
 			"reference": "/scripts/JourneyApp/ValidateManagerDiscussionDetails.js",
 			"id": "scripttask17",
-			"name": "Confirm Manager Discussion Details"
+			"name": "Validate Manager Discussion Details"
 		},
 		"b432b4ce-4382-4a1e-9cd3-d26a56c94599": {
 			"classDefinition": "com.sap.bpm.wfs.ScriptTask",
@@ -972,7 +972,7 @@
 			"classDefinition": "com.sap.bpm.wfs.ScriptTask",
 			"reference": "/scripts/JourneyApp/SetupForWait5.js",
 			"id": "scripttask21",
-			"name": "Prepare for Wait for Due Date"
+			"name": "Prepare for Wait for Consultation"
 		},
 		"35e782c0-aee0-4b56-9e80-1597e41eaaef": {
 			"classDefinition": "com.sap.bpm.wfs.ScriptTask",
@@ -991,6 +991,7 @@
 			"subject": "Please Approve Parental Leave Request",
 			"priority": "HIGH",
 			"isHiddenInLogForParticipant": false,
+			"supportsForward": false,
 			"userInterface": "sapui5://comsapbpmworkflow.comsapbpmwusformplayer/com.sap.bpm.wus.form.player",
 			"recipientUsers": "${context.journeyApp.leaveRequest.approver}",
 			"formReference": "/forms/JourneyApp/approveLeaveRequest.form",
@@ -1008,7 +1009,7 @@
 		"419e1c62-3428-4fdf-bdbb-7bff06644880": {
 			"classDefinition": "com.sap.bpm.wfs.ExclusiveGateway",
 			"id": "exclusivegateway6",
-			"name": "ExclusiveGateway6",
+			"name": "Leave Request Appoved?",
 			"default": "5a62c131-6f4c-4214-8911-0411d0e8bc65"
 		},
 		"16293c7d-f125-4f4d-9d40-75d22048e32b": {
@@ -1016,6 +1017,7 @@
 			"subject": "Confirm Meeting Request For Leave Discussion",
 			"priority": "MEDIUM",
 			"isHiddenInLogForParticipant": false,
+			"supportsForward": false,
 			"userInterface": "sapui5://comsapbpmworkflow.comsapbpmwusformplayer/com.sap.bpm.wus.form.player",
 			"recipientUsers": "${context.journeyApp.leaveRequest.approver}",
 			"formReference": "/forms/JourneyApp/confirmMeetingRequest.form",
@@ -1033,12 +1035,12 @@
 			"classDefinition": "com.sap.bpm.wfs.ScriptTask",
 			"reference": "/scripts/JourneyApp/CheckMeetingRequestDecision.js",
 			"id": "scripttask24",
-			"name": "CheckMeetingRequestDecision"
+			"name": "Validate Manager Decision"
 		},
 		"90bf4bfb-5e3a-4a98-8ebb-9e2d45dc3bee": {
 			"classDefinition": "com.sap.bpm.wfs.ExclusiveGateway",
 			"id": "exclusivegateway7",
-			"name": "ExclusiveGateway7",
+			"name": "Manager Approval?",
 			"default": "d45e71ec-58bd-4a27-91de-f54d66baf677"
 		},
 		"c6dee3e0-3c1f-4153-a7b1-852bc8e2f3a7": {
@@ -1214,7 +1216,7 @@
 		"5a62c131-6f4c-4214-8911-0411d0e8bc65": {
 			"classDefinition": "com.sap.bpm.wfs.SequenceFlow",
 			"id": "sequenceflow122",
-			"name": "SequenceFlow122",
+			"name": "Leave Request Approved",
 			"sourceRef": "419e1c62-3428-4fdf-bdbb-7bff06644880",
 			"targetRef": "d1af674d-5fa7-4c19-aa34-d013dbc2c99f"
 		},
@@ -1222,7 +1224,7 @@
 			"classDefinition": "com.sap.bpm.wfs.SequenceFlow",
 			"condition": "${context.journeyApp.leaveRequest.status == 'error'}",
 			"id": "sequenceflow123",
-			"name": "SequenceFlow123",
+			"name": "Leave Request Rejected",
 			"sourceRef": "419e1c62-3428-4fdf-bdbb-7bff06644880",
 			"targetRef": "bd351301-b0e8-444d-b7f3-bc084cbddf0c"
 		},
@@ -1258,7 +1260,7 @@
 		"d45e71ec-58bd-4a27-91de-f54d66baf677": {
 			"classDefinition": "com.sap.bpm.wfs.SequenceFlow",
 			"id": "sequenceflow128",
-			"name": "SequenceFlow128",
+			"name": "manager OK",
 			"sourceRef": "90bf4bfb-5e3a-4a98-8ebb-9e2d45dc3bee",
 			"targetRef": "35e782c0-aee0-4b56-9e80-1597e41eaaef"
 		},
