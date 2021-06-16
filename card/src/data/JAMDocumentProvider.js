@@ -6,21 +6,25 @@ sap.ui.define([], function () {
 
     var svcRoot = "/api/v1/OData";
 
-    function fetchCsrfToken(jamDest) {
+    var DocumentProvider = function (destination) {
+        this._destination = destination;
+    }
+
+    DocumentProvider.prototype._fetchCsrfToken = function () {
         var params = {
             headers: {
                 "X-CSRF-Token": "fetch",
             },
             credentials: "include"
         }
-        var url = jamDest + svcRoot;
+        var url = this._destination + svcRoot;
 
         return fetch(url, params).then((response) => {
             return response.headers.get("X-Csrf-Token");
         });
     }
 
-    function deleteContentItem(jamDest, id, csrfToken) {
+    DocumentProvider.prototype._deleteContentItem = function (id, csrfToken) {
         var params = {
             method: "DELETE",
             credentials: "include",
@@ -29,7 +33,7 @@ sap.ui.define([], function () {
                 "x-csrf-token": csrfToken
             }
         };
-        var url = jamDest + svcRoot + "/ContentItems(Id='"+id+"',ContentItemType='Document')";
+        var url = this._destination + svcRoot + "/ContentItems(Id='"+id+"',ContentItemType='Document')";
 
         return fetch(url, params).then((response) => {
             if (response.status === 204) {
@@ -41,7 +45,7 @@ sap.ui.define([], function () {
         })
     }
 
-    function createContentItem(jamDest, file, csrfToken) {
+    DocumentProvider.prototype._createContentItem = function (file, csrfToken) {
         var params = {
             method: "POST",
             body: "{\"Name\":\""+file.name+"\",\"ContentItemType\":\"Document\",\"FileName\":\""+file.name+"\"}",
@@ -53,7 +57,7 @@ sap.ui.define([], function () {
                 "x-csrf-token": csrfToken
             }
         };
-        var url = jamDest + svcRoot + "/ContentItems";
+        var url = this._destination + svcRoot + "/ContentItems";
 
         return fetch(url, params).then((response) => {
             if (response.status === 201) {
@@ -69,7 +73,7 @@ sap.ui.define([], function () {
         }));
     }
 
-    function uploadContent(jamDest, file, content) {
+    DocumentProvider.prototype._uploadContent = function (file, content) {
         var params = {
             method: "PATCH",
             body: file.data,
@@ -81,7 +85,7 @@ sap.ui.define([], function () {
                 "x-csrf-token": content.csrfToken
             }
         };
-        var url = jamDest + svcRoot + "/ContentItems(Id='"+content.id+"',ContentItemType='"+content.itemType+"')/$value";
+        var url = this._destination + svcRoot + "/ContentItems(Id='"+content.id+"',ContentItemType='"+content.itemType+"')/$value";
 
         return fetch(url, params).then((response) => {
             if (response.status === 204) {
@@ -93,21 +97,18 @@ sap.ui.define([], function () {
         });
     }
 
-    function createDocument(jamDest, file) {
+    DocumentProvider.prototype.createDocument = function (file) {
         return Promise.resolve()
-            .then(fetchCsrfToken.bind(null, jamDest))
-            .then(createContentItem.bind(null, jamDest, file))
-            .then(uploadContent.bind(null, jamDest, file));
+            .then(this._fetchCsrfToken.bind(this))
+            .then(this._createContentItem.bind(this, file))
+            .then(this._uploadContent.bind(this, file));
     }
 
-    function deleteDocument(jamDest, id) {
+    DocumentProvider.prototype.deleteDocument = function (id) {
         return Promise.resolve()
-            .then(fetchCsrfToken.bind(null, jamDest))
-            .then(deleteContentItem.bind(null, jamDest, id));
+            .then(this._fetchCsrfToken.bind(this))
+            .then(this._deleteContentItem.bind(this, id));
     }
 
-    return {
-        createDocument: createDocument,
-        deleteDocument: deleteDocument
-    }
+    return DocumentProvider;
 });

@@ -4,22 +4,11 @@
 sap.ui.define([], function () {
     "use strict";
 
-    var workflowApiVersion = "rest/v1";
-    var CSRFToken = "";
+    var workflowApiVersion = "/rest/v1";
 
-    function getWorkflowBasePath() {
-        if (window.jamApp) {
-            return window.jamApp
-                .getPortalServiceRuntimeUrl()
-                .then(function (baseUrl) {
-                    return (
-                        baseUrl +
-                        "/comsapbpmworkflow.comsapbpmwusformplayer/bpmworkflowruntime/"
-                    );
-                });
-        } else {
-            return Promise.resolve(env.WORKFLOW_URL);
-        }
+    var WFDataProvider = function (destination) {
+        this._destination = destination;
+        this._CSRFToken = "";
     }
 
     function encodeUrlWithQuery(url, query) {
@@ -33,7 +22,11 @@ sap.ui.define([], function () {
         return url;
     }
 
-    function makeAjaxRequest(url, method, body, headers, options) {
+    WFDataProvider.prototype._getWorkflowBasePath = function () {
+        return Promise.resolve(this._destination ? this._destination : env.WORKFLOW_URL);
+    }
+
+    WFDataProvider.prototype._makeAjaxRequest = function(url, method, body, headers, options) {
         var reqHeaders = {
             Accept: "application/json",
             "Content-Type": "application/json",
@@ -44,7 +37,7 @@ sap.ui.define([], function () {
         method = method || "get";
         body = body || {};
 
-        return getWorkflowBasePath().then(function (basePath) {
+        return this._getWorkflowBasePath().then(function (basePath) {
             if (!url.startsWith("http://") && !url.startsWith("https://")) {
                 url = basePath + workflowApiVersion + url;
             }
@@ -53,7 +46,7 @@ sap.ui.define([], function () {
                 method: method,
                 headers: reqHeaders,
             };
-            if (window.jamApp || !env.WORKFLOW_MOCK) {
+            if (this._destination || !env.WORKFLOW_MOCK) {
                 Object.assign(params, {
                     credentials: "include",
                 });
@@ -84,15 +77,15 @@ sap.ui.define([], function () {
                 error.response = response;
                 throw error;
             });
-        });
+        }.bind(this));
     }
 
-    function getCsrfToken() {
+    WFDataProvider.prototype._getCsrfToken = function () {
         return new Promise((resolve, reject) => {
-            if (CSRFToken || window.myCsrfToken) {
-                resolve(CSRFToken || window.myCsrfToken);
+            if (this._CSRFToken) {
+                resolve(this._CSRFToken);
             } else {
-                getWorkflowBasePath().then(function (basePath) {
+                this._getWorkflowBasePath().then(function (basePath) {
                     return fetch(basePath + workflowApiVersion + "/xsrf-token", {
                         headers: {
                             "X-CSRF-Token": "fetch",
@@ -100,24 +93,24 @@ sap.ui.define([], function () {
                         credentials: "include",
                     });
                 }).then((response) => {
-                    CSRFToken = response.headers.get("X-Csrf-Token");
-                    resolve(CSRFToken);
+                    this._CSRFToken = response.headers.get("X-Csrf-Token");
+                    resolve(this._CSRFToken);
                 });
             }
         });
     }
 
-    function getWorkflowDefinitionList() {
-        return makeAjaxRequest("/workflow-definitions.json");
+    WFDataProvider.prototype.getWorkflowDefinitionList = function () {
+        return this._makeAjaxRequest("/workflow-definitions.json");
     }
 
-    function getWorkflowDefinitionModel(workflowDefinitionId) {
-        return makeAjaxRequest("/workflow-definitions/" + workflowDefinitionId + "/model.json");
+    WFDataProvider.prototype.getWorkflowDefinitionModel = function (workflowDefinitionId) {
+        return this._makeAjaxRequest("/workflow-definitions/" + workflowDefinitionId + "/model.json");
     }
 
-    function getFormModel(formId, revisionId) {
-        return getWorkflowBasePath().then((basePath) => {
-            return makeAjaxRequest(
+    WFDataProvider.prototype.getFormModel = function (formId, revisionId) {
+        return this._getWorkflowBasePath().then((basePath) => {
+            return this._makeAjaxRequest(
                 basePath +
                 "rest/internal/v1/forms/" +
                 formId +
@@ -128,41 +121,41 @@ sap.ui.define([], function () {
         });
     }
 
-    function getWorkflowInstanceList(query) {
-        return makeAjaxRequest(encodeUrlWithQuery("/workflow-instances.json", query));
+    WFDataProvider.prototype.getWorkflowInstanceList = function (query) {
+        return this._makeAjaxRequest(encodeUrlWithQuery("/workflow-instances.json", query));
     }
 
-    function getWorkflowInstance(workflowInstanceId) {
-        return makeAjaxRequest("/workflow-instances/" + workflowInstanceId);
+    WFDataProvider.prototype.getWorkflowInstance = function (workflowInstanceId) {
+        return this._makeAjaxRequest("/workflow-instances/" + workflowInstanceId);
     }
 
-    function getWorkflowInstanceContext(workflowInstanceId) {
-        return makeAjaxRequest("/workflow-instances/" + workflowInstanceId + "/context.json");
+    WFDataProvider.prototype.getWorkflowInstanceContext = function (workflowInstanceId) {
+        return this._makeAjaxRequest("/workflow-instances/" + workflowInstanceId + "/context.json");
     }
 
-    function getWorkflowInstanceExecutionLogs(workflowInstanceId) {
-        return makeAjaxRequest("/workflow-instances/" + workflowInstanceId + "/execution-logs.json");
+    WFDataProvider.prototype.getWorkflowInstanceExecutionLogs = function (workflowInstanceId) {
+        return this._makeAjaxRequest("/workflow-instances/" + workflowInstanceId + "/execution-logs.json");
     }
 
-    function getWorkflowInstanceErrorMessages(workflowInstanceId) {
-        return makeAjaxRequest("/workflow-instances/" + workflowInstanceId + "/error-messages.json");
+    WFDataProvider.prototype.getWorkflowInstanceErrorMessages = function (workflowInstanceId) {
+        return this._makeAjaxRequest("/workflow-instances/" + workflowInstanceId + "/error-messages.json");
     }
 
-    function getTaskInstanceList(workflowInstanceId) {
-        return makeAjaxRequest("/task-instances.json" + "?workflowInstanceId=" + workflowInstanceId);
+    WFDataProvider.prototype.getTaskInstanceList = function (workflowInstanceId) {
+        return this._makeAjaxRequest("/task-instances.json" + "?workflowInstanceId=" + workflowInstanceId);
     }
 
-    function getTaskInstanceForm(taskInstanceId) {
-        return makeAjaxRequest("/task-instances/" + taskInstanceId + "/form/model");
+    WFDataProvider.prototype.getTaskInstanceForm = function (taskInstanceId) {
+        return this._makeAjaxRequest("/task-instances/" + taskInstanceId + "/form/model");
     }
 
-    function getTaskInstanceContext(taskInstanceId) {
-        return makeAjaxRequest("/task-instances/" + taskInstanceId + "/context.json");
+    WFDataProvider.prototype.getTaskInstanceContext = function (taskInstanceId) {
+        return this._makeAjaxRequest("/task-instances/" + taskInstanceId + "/context.json");
     }
 
-    function updateTaskInstance(taskInstanceId, content) {
-        return getCsrfToken().then((csrfToken) => {
-            return makeAjaxRequest(
+    WFDataProvider.prototype.updateTaskInstance = function (taskInstanceId, content) {
+        return this._getCsrfToken().then((csrfToken) => {
+            return this._makeAjaxRequest(
                 "/task-instances/" + taskInstanceId,
                 "PATCH",
                 content,
@@ -173,18 +166,18 @@ sap.ui.define([], function () {
         });
     }
 
-    function retrieveWorkflowInstance(instanceId) {
+    WFDataProvider.prototype.retrieveWorkflowInstance = function (instanceId) {
         return Promise.all([
-            getWorkflowInstance(instanceId),
-            getWorkflowInstanceContext(instanceId)
+            this.getWorkflowInstance(instanceId),
+            this.getWorkflowInstanceContext(instanceId)
         ]).then((results) => ({
             "instance": results[0],
             "context": results[1]
         }));
     }
 
-    function retrieveWorkflowInstanceWithCallback(instanceId, callback, error) {
-        retrieveWorkflowInstance(
+    WFDataProvider.prototype.retrieveWorkflowInstanceWithCallback = function (instanceId, callback, error) {
+        this.retrieveWorkflowInstance(
             instanceId
         ).then((result) => {
             callback(result.instance, result.context);
@@ -194,9 +187,9 @@ sap.ui.define([], function () {
         });
     }
 
-    function updateWorkflowContext(instanceId, context) {
-        return getCsrfToken().then((csrfToken) => {
-            return makeAjaxRequest(
+    WFDataProvider.prototype.updateWorkflowContext = function (instanceId, context) {
+        return this._getCsrfToken().then((csrfToken) => {
+            return this._makeAjaxRequest(
                 "/workflow-instances/" + instanceId + "/context",
                 "PATCH",
                 context,
@@ -206,8 +199,8 @@ sap.ui.define([], function () {
             );
         }).then(() =>
             Promise.all([
-                getWorkflowInstance(instanceId),
-                getWorkflowInstanceContext(instanceId)
+                this.getWorkflowInstance(instanceId),
+                this.getWorkflowInstanceContext(instanceId)
             ])
         ).then((results) => ({
             "instance": results[0],
@@ -215,8 +208,8 @@ sap.ui.define([], function () {
         }));
     }
 
-    function updateWorkflowContextWithCallback(instanceId, context, callback, error) {
-        updateWorkflowContext(
+    WFDataProvider.prototype.updateWorkflowContextWithCallback = function (instanceId, context, callback, error) {
+        this.updateWorkflowContext(
             instanceId,
             context
         ).then((result) => {
@@ -227,9 +220,9 @@ sap.ui.define([], function () {
         });
     }
 
-    function updateWorkflowInstance(instanceId, status) {
-        return getCsrfToken().then((csrfToken) => {
-            return makeAjaxRequest(
+    WFDataProvider.prototype.updateWorkflowInstance = function (instanceId, status) {
+        return this._getCsrfToken().then((csrfToken) => {
+            return this._makeAjaxRequest(
                 "/workflow-instances/" + instanceId,
                 "PATCH",
                 { status: status },
@@ -241,16 +234,16 @@ sap.ui.define([], function () {
             return Promise.all([
                 new Promise((resolve, reject) => {
                     setTimeout(function () {
-                        getWorkflowInstance(instanceId).then((result) => resolve(result));
-                    }, 1000);
+                        this.getWorkflowInstance(instanceId).then((result) => resolve(result));
+                    }.bind(this), 1000);
                 }), new Promise((resolve, reject) => {
                     setTimeout(function () {
-                        getWorkflowInstanceContext(instanceId).then((result) => resolve(result));
-                    }, 1000);
+                        this.getWorkflowInstanceContext(instanceId).then((result) => resolve(result));
+                    }.bind(this), 1000);
                 }), new Promise((resolve, reject) => {
                     setTimeout(function () {
-                        getWorkflowInstanceExecutionLogs(instanceId).then((result) => resolve(result));
-                    }, 1000);
+                        this.getWorkflowInstanceExecutionLogs(instanceId).then((result) => resolve(result));
+                    }.bind(this), 1000);
                 })
             ]);
         }).then((results) => ({
@@ -260,8 +253,8 @@ sap.ui.define([], function () {
         }));
     }
 
-    function updateWorkflowInstanceWithCallback(instanceId, status, callback, error) {
-        updateWorkflowInstance(
+    WFDataProvider.prototype.updateWorkflowInstanceWithCallback = function (instanceId, status, callback, error) {
+        this.updateWorkflowInstance(
             instanceId,
             status
         ).then((result) => {
@@ -272,12 +265,12 @@ sap.ui.define([], function () {
         });
     }
 
-    function cancelWorkflowInstance(instanceId) {
-        return updateWorkflowInstance(instanceId, "CANCELED");
+    WFDataProvider.prototype.cancelWorkflowInstance = function (instanceId) {
+        return this.updateWorkflowInstance(instanceId, "CANCELED");
     }
 
-    function cancelWorkflowInstanceWithCallback(instanceId, callback, error) {
-        cancelWorkflowInstance(
+    WFDataProvider.prototype.cancelWorkflowInstanceWithCallback = function (instanceId, callback, error) {
+        this.cancelWorkflowInstance(
             instanceId
         ).then((result) => {
             callback(result.instance, result.context, result.executionLogs);
@@ -286,12 +279,12 @@ sap.ui.define([], function () {
         });
     }
 
-    function restartWorkflowInstance(instanceId) {
-        return updateWorkflowInstance(instanceId, "RUNNING");
+    WFDataProvider.prototype.restartWorkflowInstance = function (instanceId) {
+        return this.updateWorkflowInstance(instanceId, "RUNNING");
     }
 
-    function restartWorkflowInstanceWithCallback(instanceId, callback, error) {
-        restartWorkflowInstance(
+    WFDataProvider.prototype. estartWorkflowInstanceWithCallback = function (instanceId, callback, error) {
+        this.restartWorkflowInstance(
             instanceId
         ).then((result) => {
             callback(result.instance, result.context, result.executionLogs);
@@ -300,13 +293,9 @@ sap.ui.define([], function () {
         });
     }
 
-    function sendWorkflowMessage(
-        definitionId,
-        workflowInstanceId,
-        data
-    ) {
-        return getCsrfToken().then((csrfToken) => {
-            return makeAjaxRequest(
+    WFDataProvider.prototype.sendWorkflowMessage = function (definitionId, workflowInstanceId, data) {
+        return this._getCsrfToken().then((csrfToken) => {
+            return this._makeAjaxRequest(
                 "/messages/",
                 "POST",
                 {
@@ -321,8 +310,8 @@ sap.ui.define([], function () {
         });
     }
 
-    function advanceWorkflowInstance(messageId, instanceId, data) {
-        return sendWorkflowMessage(
+    WFDataProvider.prototype.advanceWorkflowInstance = function (messageId, instanceId, data) {
+        return this.sendWorkflowMessage(
             messageId,
             instanceId,
             data
@@ -332,12 +321,12 @@ sap.ui.define([], function () {
                 return Promise.all(
                     [new Promise((resolve, reject) => {
                         setTimeout(function () {
-                            getWorkflowInstance(instanceId).then((result) => resolve(result));
-                        }, 1000);
+                            this.getWorkflowInstance(instanceId).then((result) => resolve(result));
+                        }.bind(this), 1000);
                     }), new Promise((resolve, reject) => {
                         setTimeout(function () {
-                            getWorkflowInstanceContext(instanceId).then((result) => resolve(result));
-                        }, 1000);
+                            this.getWorkflowInstanceContext(instanceId).then((result) => resolve(result));
+                        }.bind(this), 1000);
                     })]
                 )
             }
@@ -348,8 +337,8 @@ sap.ui.define([], function () {
         }))
     }
 
-    function advanceWorkflowInstanceWithCallback(messageId, instanceId, data, callback, error) {
-        advanceWorkflowInstance(
+    WFDataProvider.prototype.advanceWorkflowInstanceWithCallback = function (messageId, instanceId, data, callback, error) {
+        this.advanceWorkflowInstance(
             messageId,
             instanceId,
             data
@@ -366,9 +355,9 @@ sap.ui.define([], function () {
         });
     }
 
-    function createWorkflowInstance(workflowDefinitionId, context) {
-        return getCsrfToken().then((csrfToken) => {
-            return makeAjaxRequest(
+    WFDataProvider.prototype.createWorkflowInstance = function (workflowDefinitionId, context) {
+        return this._getCsrfToken().then((csrfToken) => {
+            return this._makeAjaxRequest(
                 "/workflow-instances/",
                 "POST",
                 {
@@ -382,23 +371,23 @@ sap.ui.define([], function () {
         });
     }
 
-    function createWorkflowInstandAndFetchContext(definitionId, businessKey, context, status) {
-        return createWorkflowInstance(
+    WFDataProvider.prototype.createWorkflowInstandAndFetchContext = function (definitionId, businessKey, context, status) {
+        return this.createWorkflowInstance(
             definitionId,
             context
         ).then((result) => {
             console.log("=================== CREATED WORKFLOW INSTANCE ===================");
             console.log(result);
             return result;
-        }).then(() => getSingleContextForBusinessKey(
+        }).then(() => this.getSingleContextForBusinessKey(
             definitionId,
             businessKey,
             status
         ));
     }
 
-    function createWorkflowInstandAndFetchContextWithCallback(definitionId, businessKey, context, status, callback, error) {
-        createWorkflowInstandAndFetchContext(
+    WFDataProvider.prototype.createWorkflowInstandAndFetchContextWithCallback = function (definitionId, businessKey, context, status, callback, error) {
+        this.createWorkflowInstandAndFetchContext(
             definitionId,
             businessKey,
             context,
@@ -407,7 +396,7 @@ sap.ui.define([], function () {
             if (!result) {
                 // sometimes we get nothing back - try again
                 console.warn("Failed to get instance on first query");
-                getSingleContextForBusinessKey(
+                this.getSingleContextForBusinessKey(
                     definitionId,
                     businessKey,
                     status
@@ -437,20 +426,20 @@ sap.ui.define([], function () {
      * 
      * @param  {} instanceId
      */
-    function waitForInstanceComplete(instanceId) {
+    WFDataProvider.prototype.waitForInstanceComplete = function (instanceId) {
         return new Promise(function (resolve) {
             setTimeout(function () {
                 console.log("Polling instance...");
-                getWorkflowInstance(instanceId).then(
+                this.getWorkflowInstance(instanceId).then(
                     function (instance) {
                         if (instance.status === "RUNNING") {
-                            return waitForInstanceComplete(instanceId);
+                            return this.waitForInstanceComplete(instanceId);
                         } else {
                             resolve();
                         }
                     }
                 );
-            }, 3000);
+            }.bind(this), 3000);
         });
     }
     
@@ -464,8 +453,8 @@ sap.ui.define([], function () {
      * @param  {} callback
      * @param  {} error
      */
-    function waitForInstanceCompleteWithCallback(instanceId, callback, error) {
-        waitForInstanceComplete(instanceId)
+    WFDataProvider.prototype.waitForInstanceCompleteWithCallback = function (instanceId, callback, error) {
+        this.waitForInstanceComplete(instanceId)
             .then(callback)
             .catch((err) => {
                 console.error(err);
@@ -481,7 +470,7 @@ sap.ui.define([], function () {
      * @param  {} businessKey
      * @param  {} status
      */
-    function getSingleContextForBusinessKey(definitionId, businessKey, status) {
+    WFDataProvider.prototype.getSingleContextForBusinessKey = function (definitionId, businessKey, status) {
         // returns [ { instance, context}, ... ]
         var query = {
             definitionId,
@@ -489,13 +478,13 @@ sap.ui.define([], function () {
             $top: 1,
             [status && "status"]: status
         };
-        return getWorkflowInstanceList(
+        return this.getWorkflowInstanceList(
             query
         ).then((instances) => {
             return Promise.all(
                 instances.map((instance) => {
                     return Promise.all(
-                        [getWorkflowInstanceContext(instance.id), getWorkflowInstanceExecutionLogs(instance.id)]
+                        [this.getWorkflowInstanceContext(instance.id), this.getWorkflowInstanceExecutionLogs(instance.id)]
                     ).then((results) => {
                         return {
                             instance,
@@ -549,8 +538,8 @@ sap.ui.define([], function () {
      * @param  {} callback
      * @param  {} error
      */
-    function getSingleContextForBusinessKeyWithCallback(definitionId, businessKey, status, callback, error) {
-        getSingleContextForBusinessKey(
+    WFDataProvider.prototype.getSingleContextForBusinessKeyWithCallback = function (definitionId, businessKey, status, callback, error) {
+        this.getSingleContextForBusinessKey(
             definitionId,
             businessKey,
             status,
@@ -576,20 +565,20 @@ sap.ui.define([], function () {
      * @param  {} businessKey
      * @param  {} status
      */
-    function getMultipleContextsForBusinessKey(definitionId, businessKey, status) {
+    WFDataProvider.prototype.getMultipleContextsForBusinessKey = function (definitionId, businessKey, status) {
         // returns [ { instance, context}, ... ]
         var query = {
             definitionId,
             businessKey,
             [status && "status"]: status
         };
-        return getWorkflowInstanceList(
+        return this.getWorkflowInstanceList(
             query
         ).then((instances) => {
             return Promise.all(
                 instances.map((instance) => {
                     return Promise.all(
-                        [getWorkflowInstanceContext(instance.id), getWorkflowInstanceExecutionLogs(instance.id)]
+                        [this.getWorkflowInstanceContext(instance.id), this.getWorkflowInstanceExecutionLogs(instance.id)]
                     ).then((results) => {
                         return {
                             instance,
@@ -617,8 +606,8 @@ sap.ui.define([], function () {
      * @param  {} callback
      * @param  {} error
      */
-    function getMultipleContextsForBusinessKeyWithCallback(definitionId, businessKey, status, callback, error) {
-        getMultipleContextsForBusinessKey(
+    WFDataProvider.prototype.getMultipleContextsForBusinessKeyWithCallback = function (definitionId, businessKey, status, callback, error) {
+        this.getMultipleContextsForBusinessKey(
             definitionId,
             businessKey,
             status,
@@ -632,40 +621,5 @@ sap.ui.define([], function () {
         });
     }
 
-    return {
-        getWorkflowDefinitionModel: getWorkflowDefinitionModel,
-        getFormModel: getFormModel,
-        getWorkflowDefinitionList: getWorkflowDefinitionList,
-        getWorkflowInstanceList: getWorkflowInstanceList,
-        getWorkflowInstance: getWorkflowInstance,
-        getWorkflowInstanceContext: getWorkflowInstanceContext,
-        createWorkflowInstance: createWorkflowInstance,
-        getTaskInstanceList: getTaskInstanceList,
-        getTaskInstanceForm: getTaskInstanceForm,
-        getTaskInstanceContext: getTaskInstanceContext,
-        updateTaskInstance: updateTaskInstance,
-        //
-        sendWorkflowMessage: sendWorkflowMessage,
-        //
-        getMultipleContextsForBusinessKey: getMultipleContextsForBusinessKey,
-        getMultipleContextsForBusinessKeyWithCallback: getMultipleContextsForBusinessKeyWithCallback,
-        getSingleContextForBusinessKey: getSingleContextForBusinessKey,
-        getSingleContextForBusinessKeyWithCallback: getSingleContextForBusinessKeyWithCallback,
-        retrieveWorkflowInstance: retrieveWorkflowInstance,
-        retrieveWorkflowInstanceWithCallback: retrieveWorkflowInstanceWithCallback,
-        createWorkflowInstandAndFetchContext: createWorkflowInstandAndFetchContext,
-        createWorkflowInstandAndFetchContextWithCallback: createWorkflowInstandAndFetchContextWithCallback,
-        updateWorkflowInstance: updateWorkflowInstance,
-        updateWorkflowInstanceWithCallback: updateWorkflowInstanceWithCallback,
-        updateWorkflowContext: updateWorkflowContext,
-        updateWorkflowContextWithCallback: updateWorkflowContextWithCallback,
-        cancelWorkflowInstance: cancelWorkflowInstance,
-        cancelWorkflowInstanceWithCallback: cancelWorkflowInstanceWithCallback,
-        restartWorkflowInstance: restartWorkflowInstance,
-        restartWorkflowInstanceWithCallback: restartWorkflowInstanceWithCallback,
-        advanceWorkflowInstance: advanceWorkflowInstance,
-        advanceWorkflowInstanceWithCallback: advanceWorkflowInstanceWithCallback,
-        waitForInstanceComplete: waitForInstanceComplete,
-        waitForInstanceCompleteWithCallback: waitForInstanceCompleteWithCallback,
-    };
+    return WFDataProvider;
 });

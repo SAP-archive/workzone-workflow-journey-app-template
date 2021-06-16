@@ -16,7 +16,7 @@
             ]
         },
 		"applicationVersion": {
-			"version": "2.2.0"
+			"version": "2.2.5"
 		},
 		"sourceTemplate": {
 			"id": "ui5template.basicSAPUI5ApplicationProject",
@@ -84,8 +84,10 @@
                 },
                 "myCMISDestination": {
                     "name": "bpmworkflowruntime_attachments"
-                }
-            },
+                },
+                "myWorkflowDestination": {
+                    "name": "Workflow_API"
+                }            },
             "parameters": {
                 "approver": {
                     "value": "P000026",

@@ -3,7 +3,7 @@ sap.ui.define([
     "use strict";
 
     return {
-        createContext: function (definitionId, businessKey, userDetails, documentProvider, documentDestination, workspaceName) {
+        createContext: function (definitionId, businessKey, userDetails, workspaceName) {
             // Define initial, default context
             return {
                 definitionId: definitionId,
@@ -23,8 +23,6 @@ sap.ui.define([
                         // Documents
                         //---
                         documents: [],
-                        documentProvider: documentProvider,
-                        documentDestination: documentDestination,
                         //---
                         // User Context
                         //---

@@ -4,7 +4,11 @@
 sap.ui.define([], function () {
     "use strict";
 
-    function createDocument(cmisDest, file) {
+    var DocumentProvider = function (destination) {
+        this._destination = destination;
+    }
+
+    DocumentProvider.prototype.createDocument = function (file) {
         var formData = new FormData();
 
         formData.append('cmisAction', 'createDocument');
@@ -19,7 +23,7 @@ sap.ui.define([], function () {
             body: formData,
             credentials: "include"
         };
-        var url = cmisDest + "/root?succinct=true";
+        var url = this._destination + "/root?succinct=true";
 
         return fetch(url, params).then((response) => {
             if (response.status === 201) {
@@ -35,7 +39,7 @@ sap.ui.define([], function () {
         });
     }
 
-    function deleteDocument(cmisDest, id) {
+    DocumentProvider.prototype.deleteDocument = function (id) {
         var formData = new FormData();
 
         formData.append('cmisAction', 'delete');
@@ -46,7 +50,7 @@ sap.ui.define([], function () {
             body: formData,
             credentials: "include"
         };
-        var url = cmisDest + "/root?succinct=true";
+        var url = this._destination + "/root?succinct=true";
 
         return fetch(url, params).then((response) => {
             if (response.status === 200) {
@@ -56,8 +60,5 @@ sap.ui.define([], function () {
         });
     }
 
-    return {
-        createDocument: createDocument,
-        deleteDocument: deleteDocument
-    }
+    return DocumentProvider;
 });

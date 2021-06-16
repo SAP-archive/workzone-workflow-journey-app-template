@@ -21,8 +21,6 @@ sap.ui.define(
     ) {
         "use strict";
 
-        var DocumentProvider = null;
-
         return Controller.extend("sap.wz.journey.template.card.controller.Main",
             {
                 //=================================================================================//
@@ -44,26 +42,27 @@ sap.ui.define(
                     // resolve destinations
                     Promise.all([
                         this._card.resolveDestination("myJAMDestination"),
-                        this._card.resolveDestination("myCMISDestination")
+                        this._card.resolveDestination("myCMISDestination"),
+                        this._card.resolveDestination("myWorkflowDestination")
                     ]).then((results) => {
                         // we have resolved destinations
-                        this._jamDest = results[0];
-                        this._cmisDest = results[1];
+                        this._jamDestination = results[0];
+                        this._cmisDestination = results[1];
+                        this._workflowDestination = results[2];
+
+                        this._wfDataProvider = new WFDataProvider(this._workflowDestination);
 
                         this._cardParams = this._card.getCombinedParameters();
 
-                        this._definitionId = this._cardParams.workflowDefinitionId;
-                        this._documentProvider = this._cardParams.documentProvider;
                         this._approver = this._cardParams.approver;
+                        this._definitionId = this._cardParams.workflowDefinitionId;
 
-                        if (this._documentProvider === "JAM") {
-                            DocumentProvider = JAMDocumentProvider;
-                            this._dpDest = this._jamDest;
-                        } else if (this._documentProvider === "CMIS") {
-                            DocumentProvider = CMISDocumentProvider;
-                            this._dpDest = this._cmisDest;
+                        if (this._cardParams.documentProvider === "JAM") {
+                            this._documentProvider = new JAMDocumentProvider(this._jamDestination);
+                        } else if (this._cardParams.documentProvider === "CMIS") {
+                            this._documentProvider = new CMISDocumentProvider(this._cmisDestination);
                         } else {
-                            throw new Error("Unknown Document Provider: " + this._documentProvider);
+                            throw new Error("Unknown Document Provider: " + this._cardParams.documentProvider);
                         }
 
                         var userDetails = {
@@ -125,8 +124,6 @@ sap.ui.define(
                         this._definitionId,
                         this._businessKey,
                         this._userDetails,
-                        this._documentProvider,
-                        this._dpDest,
                         this._workspaceName
                     );
 
@@ -191,8 +188,8 @@ sap.ui.define(
                     var file = event.getParameters();
 
                     // create the document in JAM
-                    DocumentProvider.createDocument(
-                        this._dpDest, file
+                    this._documentProvider.createDocument(
+                        file
                     ).then((contentId) => {
                         // we uploaded to JAM OK
                         this._setContextProperty("uploadDocuments/status", "completed");
@@ -283,7 +280,7 @@ sap.ui.define(
 
                 appStatusIsWFWaitForFeedback: function () {
                     // mark this wizard step as validated - this enables the StepN Button to be displayed
-                    this._setContextProperty("stepValidated", 2);
+                    this._setContextProperty("stepValidated", 3);
                 },
                 // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
                 // ------------------------------------------
@@ -383,7 +380,7 @@ sap.ui.define(
                     var docs = docsList.getSelectedItems();
                     var promises = [];
                     docs.forEach((docItem) => {
-                        promises.push(DocumentProvider.deleteDocument(this._dpDest, docItem.data("contentId")));
+                        promises.push(this._documentProvider.deleteDocument(docItem.data("contentId")));
                     });
 
                     Promise.all(promises).then((items) => {
@@ -537,7 +534,7 @@ sap.ui.define(
                             } else {
                                 // determine the app status update function to call
                                 var wfState = appContext.state;
-                                if (wfState !== "waitForFinalDismiss" && wfState === "receivedFinalDismiss") {
+                                if (wfState !== "waitForFinalDismiss" && wfState !== "receivedFinalDismiss") {
                                     var appStatusFn = "appStatusIsWF" + wfState.charAt(0).toUpperCase() + wfState.slice(1);
 
                                     if (typeof this[appStatusFn] !== "function") {
@@ -608,7 +605,7 @@ sap.ui.define(
                     // Create a new workflow instance
                     // This returns a new instance and context
                     // TODO: show busy indicator
-                    WFDataProvider.createWorkflowInstandAndFetchContextWithCallback(
+                    this._wfDataProvider.createWorkflowInstandAndFetchContextWithCallback(
                         this._definitionId,
                         this._businessKey,
                         this._contextModel.getData().context,
@@ -626,7 +623,7 @@ sap.ui.define(
                     var instanceId = this._contextModel.getProperty("/instance/id");
                     if (!instanceId) {
                         // no instance ... find one
-                        WFDataProvider.getMultipleContextsForBusinessKeyWithCallback(
+                        this._wfDataProvider.getMultipleContextsForBusinessKeyWithCallback(
                             this._definitionId,                 // definition ID of workflow
                             this._businessKey,                  // user id it is for
                             "RUNNING,ERRONEOUS,SUSPENDED",      // status (undefined means any status)
@@ -635,7 +632,7 @@ sap.ui.define(
                         );
                     } else {
                         // we have an ID, look this up explicitly
-                        WFDataProvider.retrieveWorkflowInstanceWithCallback(
+                        this._wfDataProvider.retrieveWorkflowInstanceWithCallback(
                             instanceId,
                             this._onLoadWorkflowInstance.bind(this),
                             this._onLoadWorkflowInstanceError.bind(this)
@@ -662,7 +659,7 @@ sap.ui.define(
 
                     // Advance workflow
                     // TODO: show busy indicator
-                    WFDataProvider.advanceWorkflowInstanceWithCallback(
+                    this._wfDataProvider.advanceWorkflowInstanceWithCallback(
                         this._nextMessage,
                         data.instance.id,
                         data.context[this._appContext],
@@ -692,7 +689,7 @@ sap.ui.define(
                     });
 
                     // Just update workflow with an updated context object
-                    WFDataProvider.updateWorkflowContextWithCallback(
+                    this._wfDataProvider.updateWorkflowContextWithCallback(
                         this._contextModel.getProperty("/instance/id"),
                         context,
                         this._onLoadWorkflowInstance.bind(this),
@@ -702,7 +699,7 @@ sap.ui.define(
 
                 _restartWorkflow: function (id) {
                     // restart the workflow
-                    WFDataProvider.restartWorkflowInstanceWithCallback(
+                    this._wfDataProvider.restartWorkflowInstanceWithCallback(
                         id || this._contextModel.getProperty("/instance/id"),
                         this._onLoadWorkflowInstance.bind(this),
                         this._onLoadWorkflowInstanceError.bind(this)
@@ -711,7 +708,7 @@ sap.ui.define(
 
                 _terminateWorkflow: function (id) {
                     // cancel the workflow
-                    WFDataProvider.cancelWorkflowInstanceWithCallback(
+                    this._wfDataProvider.cancelWorkflowInstanceWithCallback(
                         id || this._contextModel.getProperty("/instance/id"),
                         this._onLoadWorkflowInstance.bind(this),
                         this._onLoadWorkflowInstanceError.bind(this)
