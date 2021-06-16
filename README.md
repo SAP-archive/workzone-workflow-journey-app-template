@@ -9,7 +9,11 @@ This repo contains template code for building a Journey App or Guided Experience
 
 All development is best carried out using SAP Business Application Studio.
 
-The template applcoiation and workflow are designed to be deployed into SAP Work Zone.
+The template application and workflow are designed to be deployed into SAP Work Zone.
+
+You have created the correct Workflow_API destination in the relevant Cloud Foundry subaccount.
+
+The UI Integration card can be configured after deployment.  See the HOT-TO guide for more details.
 
 ## Download and Installation
 
